@@ -1,4 +1,4 @@
-# Workshop 1: IT Troubleshooting Challenge
+# Workshop 1: IT Troubleshooting Challenge 
 
 *Practical Approaches to IT Projects and Problem-Solving* | **Alijó IT Workshops**
 
