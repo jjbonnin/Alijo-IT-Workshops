@@ -1,0 +1,9 @@
+Nov 22 09:14:02 ubuntu-lab systemd[1]: Starting A high performance web server and a reverse proxy server...
+Nov 22 09:14:02 ubuntu-lab nginx[2411]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+Nov 22 09:14:02 ubuntu-lab nginx[2411]: nginx: [emerg] bind() to [::]:80 failed (98: Address already in use)
+Nov 22 09:14:03 ubuntu-lab nginx[2411]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+Nov 22 09:14:03 ubuntu-lab nginx[2411]: nginx: [emerg] bind() to [::]:80 failed (98: Address already in use)
+Nov 22 09:14:04 ubuntu-lab nginx[2411]: nginx: [emerg] still could not bind()
+Nov 22 09:14:04 ubuntu-lab systemd[1]: nginx.service: Control process exited, code=exited, status=1/FAILURE
+Nov 22 09:14:04 ubuntu-lab systemd[1]: nginx.service: Failed with result 'exit-code'.
+Nov 22 09:14:04 ubuntu-lab systemd[1]: Failed to start A high performance web server and a reverse proxy server.
