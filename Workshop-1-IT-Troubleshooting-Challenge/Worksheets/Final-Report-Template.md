@@ -2,6 +2,16 @@
 **Workshop 1: IT Troubleshooting Challenge**
 *(Each team submits one final report covering all assigned incidents and the surprise incident)*
 
+> **Base Structure Reference:** This workshop worksheet extends the standard [Technical Incident Report Base Template](../../../00-Shared-Resources/Templates/Incident-Report-Base-Template.md). Remember that *"it works now"* is never valid evidence—attach raw terminal outputs or screenshots for every resolved incident.
+
+---
+
+## Team & Session Information
+* **Team Name & Members:** 
+* **Date:** 
+* **VM Hostname & Ubuntu Version:** 
+* **Baseline Network Configuration (IPv4 / Gateway / DNS):** 
+
 ---
 
 ## Incident 01: INCORRECT IP CONFIGURATION
