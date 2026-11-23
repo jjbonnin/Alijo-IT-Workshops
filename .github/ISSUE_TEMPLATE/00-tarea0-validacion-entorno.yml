@@ -1,0 +1,86 @@
+name: "Tarea 0: Validación del Entorno de Trabajo (W1–W4)"
+description: "Comprobación inicial obligatoria de equipo, VM Ubuntu, Snapshot base y acceso a GitHub para los grupos A1–A6 y B1–B6."
+title: "[TAREA-0][Grupo-XX] Validación del entorno"
+labels: ["tarea-0", "peer:pending"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Instrucciones de Entrega (Tarea 0)
+        Completa este formulario antes de iniciar cualquiera de los 4 talleres. Al enviarlo, un **bot automático (60%)** validará vuestra entrega y quedará lista para la **revisión entre pares (40%)**.
+
+  - type: dropdown
+    id: turno
+    attributes:
+      label: "Turno"
+      options:
+        - "Turno A (08:25 - 10:10)"
+        - "Turno B (10:30 - 12:15)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: grupo
+    attributes:
+      label: "Identificador de Grupo (4–5 alumnos)"
+      options:
+        - "A1"
+        - "A2"
+        - "A3"
+        - "A4"
+        - "A5"
+        - "A6"
+        - "B1"
+        - "B2"
+        - "B3"
+        - "B4"
+        - "B5"
+        - "B6"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: taller
+    attributes:
+      label: "Taller que vais a realizar"
+      options:
+        - "W1 - IT Troubleshooting Challenge"
+        - "W2 - AI as an IT Technician Assistant"
+        - "W3 - Build and Configure a Network"
+        - "W4 - Linux Server Administration"
+    validations:
+      required: true
+
+  - type: textarea
+    id: integrantes
+    attributes:
+      label: "Integrantes del Equipo y Roles (4–5 miembros)"
+      description: "Escribe un miembro por línea indicando nombre, usuario de GitHub (@usuario) y rol asignado."
+      placeholder: |
+        - Nombre 1 (@usuario1) - Coordinator
+        - Nombre 2 (@usuario2) - Lead Technician
+        - Nombre 3 (@usuario3) - Evidence Recorder
+        - Nombre 4 (@usuario4) - Verifier / Auditor
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Checklist de Preparación del Entorno"
+      options:
+        - label: "VirtualBox operativo y VM Ubuntu arrancada en red aislada (NAT / Internal Network)."
+          required: true
+        - label: "Snapshot limpio verificado con el nombre exacto: BASELINE – BEFORE WORKSHOP"
+          required: true
+        - label: "Acceso al repositorio Alijo-IT-Workshops y herramientas del taller (Packet Tracer / IA / CLI) comprobadas."
+          required: true
+
+  - type: textarea
+    id: evidencia_cli
+    attributes:
+      label: "Evidencia CLI de la VM (Obligatoria)"
+      description: "Ejecuta en la terminal de tu VM: `whoami && hostname && ip -br -4 a && df -h /` y pega aquí la salida exacta."
+      render: bash
+    validations:
+      required: true
