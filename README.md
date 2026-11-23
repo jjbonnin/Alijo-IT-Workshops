@@ -1,37 +1,39 @@
 # Alijó IT Workshops
 
-Welcome to the Alijó IT Workshops repository. This collection of hands-on practical labs is designed to develop core competencies in IT problem-solving, artificial intelligence application, network infrastructure, and system administration.
+Welcome to the **Alijó IT Workshops** repository (`Practical Approaches to IT Projects and Problem-Solving`). This collection of hands-on practical labs is designed to develop core competencies in IT problem-solving, artificial intelligence application, network infrastructure, and Linux server administration.
 
-## Repository Structure
+---
 
-The workshops are organized into dedicated folders, each containing student guides, worksheets, and teacher resources.
+## Hands-On Workshops
 
-* **[01-Problem-Solving](./01-Problem-Solving/)**
-  * **Workshop 1: IT Troubleshooting Challenge**
-  * Focus: resolving computer incidents using a structured methodology of diagnosis, intervention, and verification.
+Each workshop is located in its own root directory with complete student guides, printable worksheets, and lab assets:
 
-* **[02-Artificial-Intelligence](./02-Artificial-Intelligence/)**
-  * **Workshop 2: AI as an IT Technician Assistant**
-  * Focus: using AI as a tool to support diagnosis, programming, and computer administration, with an emphasis on verifying AI-generated answers.
+* **[Workshop 1: IT Troubleshooting Challenge](./Workshop-1-IT-Troubleshooting-Challenge/)**
+  * **Focus:** Resolving computer and service incidents using a structured 7-step methodology of diagnosis, controlled intervention, and verification.
+* **[Workshop 2: AI as an IT Technician Assistant](./Workshop-2-AI-IT-Technician-Assistant/)**
+  * **Focus:** Applying AI assistants to support diagnostics, scripting, and system administration with strict evidence-first prompting and pre-execution safety audits.
+* **[Workshop 3: Build and Configure a Network](./Workshop-3-Build-and-Configure-Network/)**
+  * **Focus:** Designing, simulating (Cisco Packet Tracer), physically cabling, configuring, and troubleshooting a multi-subnet small-business network.
+* **[Workshop 4: Linux Server Administration](./Workshop-4-Linux-Server-Administration/)**
+  * **Focus:** Administering an Ubuntu Linux server from the CLI, enforcing least-privilege POSIX permissions, hardening `systemd` services and `ufw`, automating health checks in Bash/cron, and resolving multi-layer outages.
 
-* **[03-Network-Infrastructure](./03-Network-Infrastructure/)**
-  * **Workshop 3: Build and Configure a Small Network**
-  * Focus: designing, assembling, configuring, and verifying a small physical or simulated network infrastructure.
+---
 
-* **[04-System-Administration](./04-System-Administration/)**
-  * **Workshop 4: Linux Server Administration Lab**
-  * Focus: managing a Linux server, configuring basic services, and resolving common administrative issues via the command line.
+## Reference Modules & Shared Resources
 
-* **[00-Shared-Resources](./00-Shared-Resources/)**
-  * Contains common virtualization guides, templates, and reference materials used across multiple workshops.
+* **[00-Shared-Resources](./00-Shared-Resources/):** Cross-workshop instructor playbook, VirtualBox setup and snapshot recovery guides, shared assessment framework, and standard incident report templates.
+* **[01-Problem-Solving](./01-Problem-Solving/):** Foundational reference material on structured troubleshooting methodologies.
+* **[02-Artificial-Intelligence](./02-Artificial-Intelligence/):** Reference guides and prompt templates for AI-assisted IT operations.
+* **[03-Network-Infrastructure](./03-Network-Infrastructure/):** Reference material on TCP/IP networking, subnetting, routing, and network diagnostics.
+* **[04-System-Administration](./04-System-Administration/):** Reference material on Linux server architecture, permissions, services, and firewall hardening.
+* **[Teacher-Resources](./Teacher-Resources/):** Centralized instructor-only guides, fault-injection scripts, answer keys, and grading rubrics for all four workshops. *(Note: Move or restrict this directory to a private repository before granting students direct repository access).*
 
-* **[Teacher-Resources](./Teacher-Resources/)**
-  * A centralized zone containing all teacher-only notes, setup instructions, expected solutions, and assessment rubrics for all workshops. *(Note: If this repository is used by students, this folder should be moved to a private repository).*
+---
 
 ## Workshop Format
 
-Each workshop is designed as a **3-hour (180 minutes) hands-on lab** for teams of **4–5 students**. The materials emphasize practical execution, evidence collection, and professional technical reporting.
+Each workshop is designed as a **3-hour (180-minute) hands-on lab** for teams of **4–5 students**, emphasizing practical execution, verifiable CLI evidence, and professional technical reporting.
 
 ## License
 
-This project is licensed under the GPL-3.0 license - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the GPL-3.0 license — see the [LICENSE](./LICENSE) file for details.
