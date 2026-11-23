@@ -1,5 +1,4 @@
 ---
-![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w1.jpg)
 marp: true
 theme: default
 paginate: true
@@ -22,6 +21,17 @@ style: |
   }
 ---
 
+![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w1.jpg)
+
+# Workshop 1: IT Troubleshooting Challenge
+### Practical Approaches to IT Projects and Problem-Solving
+**Agrupamento de Escolas D. Sancho II, Alijó**
+
+*Ponente: Juan José Bonnín Sansó (IES Sa Colomina)*
+
+---
+
+![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w1.jpg)
 # Workshop 1: IT Troubleshooting Challenge
 ### Practical Approaches to IT Projects and Problem-Solving
 **Alijó IT Workshops**
