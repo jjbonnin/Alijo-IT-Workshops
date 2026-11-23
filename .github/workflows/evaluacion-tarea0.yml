@@ -1,4 +1,4 @@
-name: Evaluación Automática y Peer-to-Peer (Tarea 0)
+name: Evaluación Automática y Docente (Tarea 0)
 
 on:
   issues:
@@ -14,7 +14,7 @@ jobs:
     if: contains(github.event.issue.labels.*.name, 'tarea-0')
     runs-on: ubuntu-latest
     steps:
-      - name: Calcular notas A (60%/30%), P (40%/30%) y T (40%)
+      - name: Calcular notas A (100% o 40%) y T (60%) según taller
         uses: actions/github-script@v7
         with:
           script: |
@@ -25,15 +25,6 @@ jobs:
             const body = issue.body || '';
             const currentLabels = issue.labels.map(l => l.name);
 
-            const peerMap = {
-              A1: 'A2', A2: 'A3', A3: 'A4', A4: 'A5', A5: 'A6', A6: 'A1',
-              B1: 'B2', B2: 'B3', B3: 'B4', B4: 'B5', B5: 'B6', B6: 'B1'
-            };
-            const reviewerMap = {
-              A2: 'A1', A3: 'A2', A4: 'A3', A5: 'A4', A6: 'A5', A1: 'A6',
-              B2: 'B1', B3: 'B2', B4: 'B3', B5: 'B4', B6: 'B5', B1: 'B6'
-            };
-
             const grupoMatch = body.match(/### Identificador de Grupo[^\n]*\n+([AB][1-6])/);
             const grupo = grupoMatch ? grupoMatch[1].trim() : null;
             const tallerMatch = body.match(/### Taller que vais a realizar[^\n]*\n+(W[1-4])/);
@@ -42,84 +33,96 @@ jobs:
             let autoRaw = 0;
             const autoChecks = [];
 
-            if (grupo) {
-              autoRaw += 25;
-              autoChecks.push(`✅ **Grupo identificado (${grupo}):** 25/25`);
+            // 1. Grupo y Taller (20 pts)
+            if (grupo && taller) {
+              autoRaw += 20;
+              autoChecks.push(`✅ **Grupo (${grupo}) y Taller (${taller}) identificados:** 20/20`);
             } else {
-              autoChecks.push(`❌ **Grupo no detectado:** Selecciona A1–A6 o B1–B6.`);
+              autoChecks.push(`❌ **Grupo o Taller no detectado:** Selecciona A1–A6/B1–B6 y W1–W4.`);
             }
 
+            // 2. Integrantes y roles (20 pts)
             const membersBlock = body.split('### Integrantes del Equipo y Roles')[1]?.split('###')[0] || '';
             const memberLines = membersBlock.trim().split('\n').filter(l => l.trim().length > 4);
             if (memberLines.length >= 4) {
-              autoRaw += 25;
-              autoChecks.push(`✅ **Integrantes y roles (${memberLines.length} miembros):** 25/25`);
+              autoRaw += 20;
+              autoChecks.push(`✅ **Integrantes y roles (${memberLines.length} miembros):** 20/20`);
             } else {
               autoChecks.push(`⚠️ **Integrantes insuficientes (${memberLines.length}/4):** Añade 4–5 miembros con sus roles.`);
             }
 
-            const checkedCount = (body.match(/- \[X\]/gi) || []).length;
-            if (checkedCount >= 3) {
-              autoRaw += 25;
-              autoChecks.push(`✅ **Checklist de VM y Snapshot (${checkedCount}/3):** 25/25`);
+            // 3. Checklist Base Común (20 pts)
+            const baseBlock = body.split('### 1. Requisitos Base Comunes')[1]?.split('###')[0] || '';
+            const baseChecked = (baseBlock.match(/- \[X\]/gi) || []).length;
+            if (baseChecked >= 3) {
+              autoRaw += 20;
+              autoChecks.push(`✅ **Requisitos Base Comunes (${baseChecked}/3):** 20/20`);
             } else {
-              autoChecks.push(`❌ **Checklist incompleto (${checkedCount}/3):** Marca las 3 casillas de verificación.`);
+              autoChecks.push(`❌ **Requisitos Base incompletos (${baseChecked}/3):** Marca las 3 casillas comunes.`);
             }
 
+            // 4. Checklist Específico del Taller seleccionado (20 pts)
+            const specBlock = body.split('### 2. Requisito Específico del Taller')[1]?.split('###')[0] || '';
+            const specRegex = taller ? new RegExp(`- \\[X\\]\\s*\\[${taller}`, 'i') : null;
+            if (specRegex && specRegex.test(specBlock)) {
+              autoRaw += 20;
+              autoChecks.push(`✅ **Requisito específico de ${taller} marcado:** 20/20`);
+            } else {
+              autoChecks.push(`❌ **Requisito específico faltante:** Marca la casilla correspondiente a **[${taller || 'W1–W4'}]** en la sección 2.`);
+            }
+
+            // 5. Evidencia técnica CLI adaptada al taller (20 pts)
             const hasIPv4 = /\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(body);
             const hasDisk = /(Use%|Avail|Mounted on|\/dev\/)/i.test(body);
-            if (hasIPv4 && hasDisk) {
-              autoRaw += 25;
-              autoChecks.push(`✅ **Evidencia CLI real (IPv4 + Disco):** 25/25`);
-            } else {
-              autoChecks.push(`❌ **Evidencia CLI inválida:** Pega la salida real de \`whoami && hostname && ip -br -4 a && df -h /\`.`);
+            let specEvidenceOk = true;
+            let specEvidenceNote = '';
+
+            if (taller === 'W3') {
+              specEvidenceOk = /packettracer/i.test(body);
+              specEvidenceNote = specEvidenceOk ? ' + Packet Tracer detectado' : ' (falta salida de `which packettracer`)';
+            } else if (taller === 'W4') {
+              specEvidenceOk = /SUDO_OK/i.test(body);
+              specEvidenceNote = specEvidenceOk ? ' + Sudo verificado' : ' (falta `SUDO_OK`)';
             }
 
+            if (hasIPv4 && hasDisk && specEvidenceOk) {
+              autoRaw += 20;
+              autoChecks.push(`✅ **Evidencia CLI de ${taller || 'VM'} válida (IPv4 + Disco${specEvidenceNote}):** 20/20`);
+            } else {
+              autoChecks.push(`❌ **Evidencia CLI incompleta${specEvidenceNote}:** Ejecuta exactamente el comando indicado para ${taller || 'tu taller'}.`);
+            }
+
+            // Leer comentarios para calificación docente
             const { data: comments } = await github.rest.issues.listComments({
               owner, repo, issue_number: issueNumber
             });
 
-            let peerRaw = null;
-            let peerAuthor = null;
             let teacherRaw = null;
-
             for (const c of comments) {
               if (c.user.type === 'Bot') continue;
               const tMatch = c.body.match(/TEACHER-SCORE:\s*(\d{1,3})/i);
               if (tMatch) {
                 teacherRaw = Math.min(100, Math.max(0, parseInt(tMatch[1], 10)));
               }
-              if (c.user.login === issue.user.login) continue;
-              const pMatch = c.body.match(/PEER-SCORE:\s*(\d{1,3})/i);
-              if (pMatch) {
-                peerRaw = Math.min(100, Math.max(0, parseInt(pMatch[1], 10)));
-                peerAuthor = c.user.login;
-              }
             }
 
             const hasTeacher = currentLabels.includes('teacher-review') || teacherRaw !== null;
-            const pScore = peerRaw !== null ? peerRaw : 0;
             const tScore = teacherRaw !== null ? teacherRaw : 0;
 
             let finalScore = 0;
             let formulaText = '';
 
             if (hasTeacher) {
-              const aWeighted = +(autoRaw * 0.30).toFixed(1);
-              const pWeighted = +(pScore * 0.30).toFixed(1);
-              const tWeighted = +(tScore * 0.40).toFixed(1);
-              finalScore = +(aWeighted + pWeighted + tWeighted).toFixed(1);
-              formulaText = `**Modo con Revisión Docente (30% A + 30% P + 40% T):**\n` +
-                `- 🤖 Automática (30%): **${aWeighted} / 30 pts** *(Base: ${autoRaw}/100)*\n` +
-                `- 👥 Peer-to-Peer (30%): **${pWeighted} / 30 pts** ${peerRaw !== null ? `*(Base: ${peerRaw}/100 por @${peerAuthor})*` : '*(Pendiente)*'}\n` +
-                `- 🎓 Profesor (40%): **${tWeighted} / 40 pts** ${teacherRaw !== null ? `*(Base: ${teacherRaw}/100)*` : '*(Pendiente de TEACHER-SCORE)*'}`;
+              const aWeighted = +(autoRaw * 0.40).toFixed(1);
+              const tWeighted = +(tScore * 0.60).toFixed(1);
+              finalScore = +(aWeighted + tWeighted).toFixed(1);
+              formulaText = `**Modo con Revisión Docente (40% A + 60% T):**\n` +
+                `- 🤖 Automática (40%): **${aWeighted} / 40 pts** *(Base: ${autoRaw}/100)*\n` +
+                `- 🎓 Profesor (60%): **${tWeighted} / 60 pts** ${teacherRaw !== null ? `*(Base: ${teacherRaw}/100)*` : '*(Pendiente de TEACHER-SCORE)*'}`;
             } else {
-              const aWeighted = +(autoRaw * 0.60).toFixed(1);
-              const pWeighted = +(pScore * 0.40).toFixed(1);
-              finalScore = +(aWeighted + pWeighted).toFixed(1);
-              formulaText = `**Modo Estándar (60% A + 40% P):**\n` +
-                `- 🤖 Automática (60%): **${aWeighted} / 60 pts** *(Base: ${autoRaw}/100)*\n` +
-                `- 👥 Peer-to-Peer (40%): **${pWeighted} / 40 pts** ${peerRaw !== null ? `*(Base: ${peerRaw}/100 por @${peerAuthor})*` : '*(Pendiente de revisión por Grupo ' + (grupo ? reviewerMap[grupo] : 'XX') + ')*'}`;
+              finalScore = autoRaw;
+              formulaText = `**Modo Automático Estándar (100% A):**\n` +
+                `- 🤖 Automática (100%): **${finalScore} / 100 pts**`;
             }
 
             const labelsToAdd = [];
@@ -131,10 +134,6 @@ jobs:
             const autoPassed = autoRaw === 100;
             labelsToAdd.push(autoPassed ? 'auto:passed' : 'auto:failed');
 
-            if (peerRaw !== null) {
-              labelsToAdd.push('peer:done');
-              try { await github.rest.issues.removeLabel({ owner, repo, issue_number: issueNumber, name: 'peer:pending' }); } catch (e) {}
-            }
             if (teacherRaw !== null) {
               labelsToAdd.push('teacher:graded');
             }
@@ -148,24 +147,17 @@ jobs:
             await github.rest.issues.addLabels({ owner, repo, issue_number: issueNumber, labels: labelsToAdd });
 
             const botHeader = '<!-- BOT-EVAL-SUMMARY -->';
-            const reviewerGroup = grupo ? reviewerMap[grupo] : 'XX';
-            const targetGroup = grupo ? peerMap[grupo] : 'XX';
-
             const summaryBody = [
               botHeader,
-              `### 📊 Panel de Evaluación — Tarea 0 ${grupo ? `(Grupo ${grupo})` : ''}`,
+              `### 📊 Panel de Evaluación — Tarea 0 ${grupo ? `(Grupo ${grupo} · ${taller || ''})` : ''}`,
               '',
-              '#### 1. Desglose de Validación Automática',
+              '#### 1. Desglose de Validación Automática por Taller',
               ...autoChecks,
               '',
               '#### 2. Calificación Ponderada Actual',
               formulaText,
               '',
-              `### 🏆 NOTA TOTAL ACTUAL: **${finalScore} / 100 pts**`,
-              '',
-              grupo
-                ? `> **Asignación Peer-to-Peer:** Este Issue (**Grupo ${grupo}**) debe ser revisado por el **Grupo ${reviewerGroup}**. A su vez, el **Grupo ${grupo}** debe revisar el Issue del **Grupo ${targetGroup}**.`
-                : ''
+              `### 🏆 NOTA TOTAL ACTUAL: **${finalScore} / 100 pts**`
             ].join('\n');
 
             const existingBotComment = comments.find(c => c.body.includes(botHeader));

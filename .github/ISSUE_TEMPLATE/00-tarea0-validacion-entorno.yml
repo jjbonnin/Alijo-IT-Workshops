@@ -1,13 +1,13 @@
 name: "Tarea 0: Validación del Entorno de Trabajo (W1–W4)"
-description: "Comprobación inicial obligatoria de equipo, VM Ubuntu, Snapshot base y acceso a GitHub para los grupos A1–A6 y B1–B6."
+description: "Comprobación inicial obligatoria de equipo, VM Ubuntu, Snapshot base y requisitos específicos del taller elegido (W1, W2, W3 o W4)."
 title: "[TAREA-0][Grupo-XX] Validación del entorno"
-labels: ["tarea-0", "peer:pending"]
+labels: ["tarea-0"]
 body:
   - type: markdown
     attributes:
       value: |
         ### Instrucciones de Entrega (Tarea 0)
-        Completa este formulario antes de iniciar cualquiera de los 4 talleres. Al enviarlo, un **bot automático (60%)** validará vuestra entrega y quedará lista para la **revisión entre pares (40%)**.
+        Completa este formulario antes de iniciar tu taller asignado. El **sistema automático (100%)** validará que tenéis exactamente el entorno necesario para vuestro taller (o **40% Automática + 60% Docente** si lo revisa el profesor).
 
   - type: dropdown
     id: turno
@@ -65,22 +65,36 @@ body:
       required: true
 
   - type: checkboxes
-    id: checklist
+    id: checklist_base
     attributes:
-      label: "Checklist de Preparación del Entorno"
+      label: "1. Requisitos Base Comunes (Obligatorios para W1–W4)"
       options:
         - label: "VirtualBox operativo y VM Ubuntu arrancada en red aislada (NAT / Internal Network)."
           required: true
-        - label: "Snapshot limpio verificado con el nombre exacto: BASELINE – BEFORE WORKSHOP"
+        - label: "Snapshot limpio creado antes de empezar con el nombre exacto: BASELINE – BEFORE WORKSHOP"
           required: true
-        - label: "Acceso al repositorio Alijo-IT-Workshops y herramientas del taller (Packet Tracer / IA / CLI) comprobadas."
+        - label: "Acceso comprobado al repositorio Alijo-IT-Workshops y a las guías del taller."
           required: true
+
+  - type: checkboxes
+    id: checklist_especifico
+    attributes:
+      label: "2. Requisito Específico del Taller Seleccionado (Marca SOLO el de tu taller)"
+      options:
+        - label: "[W1 - Troubleshooting] Utilidades de diagnóstico CLI comprobadas (ip, ss, systemctl, journalctl, df, ping)."
+        - label: "[W2 - AI Assistant] Acceso verificado a herramienta de IA (ChatGPT / Gemini / Claude / Copilot) y entorno sin datos reales."
+        - label: "[W3 - Networking] Cisco Packet Tracer instalado y arrancando correctamente en el equipo de trabajo."
+        - label: "[W4 - Linux Server] Privilegios sudo activos en la VM Ubuntu y acceso operativo a repositorios apt."
 
   - type: textarea
     id: evidencia_cli
     attributes:
-      label: "Evidencia CLI de la VM (Obligatoria)"
-      description: "Ejecuta en la terminal de tu VM: `whoami && hostname && ip -br -4 a && df -h /` y pega aquí la salida exacta."
+      label: "Evidencia Técnica de Validación (Obligatoria)"
+      description: |
+        Ejecuta el comando correspondiente a tu taller y pega aquí la salida completa:
+        - **W1 / W2:** `whoami && hostname && ip -br -4 a && df -h /`
+        - **W3 (Packet Tracer):** `whoami && hostname && ip -br -4 a && df -h / && which packettracer`
+        - **W4 (Linux Server):** `whoami && hostname && ip -br -4 a && df -h / && sudo -n true && echo "SUDO_OK"`
       render: bash
     validations:
       required: true
