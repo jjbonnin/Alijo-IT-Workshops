@@ -48,7 +48,7 @@ nohup python3 -m http.server 8080 --directory ~/alijo-intranet > /tmp/alijo-http
 
 Verify locally:
 ```bash
-curl -I [http://127.0.0.1:8080](http://127.0.0.1:8080)
+curl -I http://127.0.0.1:8080
 ```
 
 ---
