@@ -34,7 +34,7 @@ style: |
 
 ---
 
-# Workshop 3: Build and Configure a Network
+## 0. Workshop 3: Build and Configure a Network
 ### Practical Approaches to IT Projects and Problem-Solving
 **Alijó IT Workshops**
 
@@ -117,6 +117,8 @@ Notas del orador (12–15 min):
 -->
 
 ---
+
+![bg right:42% contain](../../Workshop-3-Build-and-Configure-Network/Assets/slides/diagram-topology.jpg)
 
 ## 4. Reference Topology & IPv4 Addressing Plan
 
