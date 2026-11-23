@@ -77,4 +77,5 @@ Complete these checks on every student workstation before the session begins:
 * **`Solutions-and-Setup/Surprise-Incident-Setup.md`**: Step-by-step protocol for deploying Incident 06 at minute 115.
 * **`Solutions-and-Setup/Expected-Diagnoses.md`**: Instructor cheat sheet mapping symptoms to root causes and expected student commands.
 * **`Solutions-and-Setup/app-monitor-annotated.py`**: Line-by-line commented reference of the Python script used in Incident 05.
+* **[Shared Instructor Lab Playbook](../../00-Shared-Resources/Instructor-Lab-Playbook.md)**: Cross-workshop phase-by-phase guide detailing when and which shared virtualization guides and templates to use during the 180-minute session.
 * **`Assessment-Rubric.md`**: 20-point grading matrix across Methodology, Diagnostics, Resolution, Documentation, and Teamwork.
