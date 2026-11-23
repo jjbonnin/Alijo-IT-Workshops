@@ -1,16 +1,41 @@
 ---
-![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w2.jpg)
 marp: true
 theme: default
 paginate: true
 backgroundColor: #0f172a
 color: #f8fafc
 header: "Alijó IT Workshops | Workshop 2: AI as an IT Technician Assistant"
-footer: "Practical Approaches to IT Projects and Problem-Solving"
+footer: "Practica2 Artificial Intelligence and its Applications in IT"
+style: |
+  section::before {
+    content: "";
+    position: absolute;
+    top: 22px;
+    right: 28px;
+    width: 110px;
+    height: 75px;
+    background-image: url('../../00-Shared-Resources/Assets/logo-ies-sa-colomina-dark.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.85;
+    pointer-events: none;
+  }
+---
+
+![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w2.jpg)
+
+# Workshop 2: AI as an IT Technician Assistant
+
+### Practica2 Artificial Intelligence and its Applications in IT
+
+**Agrupamento de Escolas D. Sancho II, Alijó**
+
+*Ponente: Juan José Bonnín Sansó (IES Sa Colomina)*
+
 ---
 
 # Workshop 2: AI as an IT Technician Assistant
-### Practical Approaches to IT Projects and Problem-Solving
+### Practica2 Artificial Intelligence and its Applications in IT
 **Alijó IT Workshops**
 
 * **Duration:** 180 Minutes (3 Hours)
