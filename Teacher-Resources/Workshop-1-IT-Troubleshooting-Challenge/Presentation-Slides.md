@@ -7,6 +7,19 @@ backgroundColor: #0f172a
 color: #f8fafc
 header: "Alijó IT Workshops | Workshop 1: IT Troubleshooting Challenge"
 footer: "Practical Approaches to IT Projects and Problem-Solving"
+style: |
+  section::after {
+    content: "";
+    position: absolute;
+    top: 22px;
+    right: 28px;
+    width: 110px;
+    height: 75px;
+    background-image: url('../../00-Shared-Resources/Assets/logo-ies-sa-colomina-dark.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.85;
+  }
 ---
 
 # Workshop 1: IT Troubleshooting Challenge
