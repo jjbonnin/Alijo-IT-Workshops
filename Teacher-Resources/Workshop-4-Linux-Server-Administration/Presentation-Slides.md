@@ -24,7 +24,7 @@ style: |
 
 ![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w1.jpg)
 
-# Workshop 4: Linux Server Administration
+## 0. Workshop 4: Linux Server Administration
 
 ### Practical Approaches to IT Projects and Problem-Solving
 
@@ -251,6 +251,8 @@ Notas del orador (100–130 min):
 -->
 
 ---
+
+![bg right:42% contain](../../Workshop-4-Linux-Server-Administration/Assets/slides/diagram-5-layers.jpg)
 
 ## 9. Module 6: 5-Layer Troubleshooting Stack
 
