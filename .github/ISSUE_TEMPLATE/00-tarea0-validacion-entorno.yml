@@ -51,16 +51,17 @@ body:
     validations:
       required: true
 
-  - type: textarea
+- type: textarea
     id: integrantes
     attributes:
       label: "Integrantes del Equipo y Roles (4–5 miembros)"
-      description: "Escribe un miembro por línea indicando nombre, usuario de GitHub (@usuario) y rol asignado."
-      placeholder: |
-        - Nombre 1 (@usuario1) - Coordinator
-        - Nombre 2 (@usuario2) - Lead Technician
-        - Nombre 3 (@usuario3) - Evidence Recorder
-        - Nombre 4 (@usuario4) - Verifier / Auditor
+      description: "Escribe el nombre y usuario de GitHub (@usuario) al lado de cada rol (borra la última línea si sois 4)."
+      value: |
+        - Coordinator: 
+        - Lead Technician: 
+        - Evidence Recorder: 
+        - Verifier / Auditor: 
+        - Support / Backup (opcional 5.º miembro): 
     validations:
       required: true
 
