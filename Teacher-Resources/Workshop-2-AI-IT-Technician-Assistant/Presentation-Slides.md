@@ -1,4 +1,5 @@
 ---
+![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w2.jpg)
 marp: true
 theme: default
 paginate: true
