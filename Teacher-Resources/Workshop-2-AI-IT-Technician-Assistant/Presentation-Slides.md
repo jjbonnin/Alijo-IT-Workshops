@@ -5,7 +5,7 @@ paginate: true
 backgroundColor: #0f172a
 color: #f8fafc
 header: "Alijó IT Workshops | Workshop 2: AI as an IT Technician Assistant"
-footer: "Practica2 Artificial Intelligence and its Applications in IT"
+footer: "Practical Approaches to IT Projects and Problem-Solving"
 style: |
   section::before {
     content: "";
@@ -35,7 +35,7 @@ style: |
 ---
 
 # Workshop 2: AI as an IT Technician Assistant
-### Practica2 Artificial Intelligence and its Applications in IT
+### Practical Approaches to IT Projects and Problem-Solving
 **Alijó IT Workshops**
 
 * **Duration:** 180 Minutes (3 Hours)
