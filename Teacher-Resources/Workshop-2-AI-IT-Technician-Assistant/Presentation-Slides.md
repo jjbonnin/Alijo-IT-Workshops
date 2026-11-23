@@ -34,7 +34,7 @@ style: |
 
 ---
 
-# Workshop 2: AI as an IT Technician Assistant
+## 0. Workshop 2: AI as an IT Technician Assistant
 ### Practical Approaches to IT Projects and Problem-Solving
 **Alijó IT Workshops**
 
@@ -94,6 +94,8 @@ Notas del orador (10–12 min):
 -->
 
 ---
+
+![bg right:42% contain](../../Workshop-2-AI-IT-Technician-Assistant/Assets/slides/diagram-ai-audit.jpg)
 
 ## 3. Team Roles & AI Governance
 
@@ -155,6 +157,8 @@ Notas del orador (20–35 min):
 -->
 
 ---
+
+![bg right:42% contain](../../Workshop-2-AI-IT-Technician-Assistant/Assets/slides/diagram-ai-audit.jpg)
 
 ## 6. The Pre-Execution Audit Checklist
 
