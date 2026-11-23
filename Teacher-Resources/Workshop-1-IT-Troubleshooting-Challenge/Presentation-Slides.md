@@ -32,7 +32,8 @@ style: |
 ---
 
 ![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w1.jpg)
-# Workshop 1: IT Troubleshooting Challenge
+
+## 0. Workshop 1: IT Troubleshooting Challenge
 ### Practical Approaches to IT Projects and Problem-Solving
 **Alijó IT Workshops**
 
@@ -135,6 +136,8 @@ Notas del orador (15–20 min):
 -->
 
 ---
+
+![bg right:42% contain](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/diagram-7-steps.jpg)
 
 ## 5. The 7-Step Troubleshooting Methodology
 
