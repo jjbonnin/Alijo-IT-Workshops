@@ -1,5 +1,4 @@
 ---
-![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w4.jpg)
 marp: true
 theme: default
 paginate: true
@@ -7,6 +6,32 @@ backgroundColor: #0f172a
 color: #f8fafc
 header: "Alijó IT Workshops | Workshop 4: Linux Server Administration"
 footer: "Practical Approaches to IT Projects and Problem-Solving"
+style: |
+  section::before {
+    content: "";
+    position: absolute;
+    top: 22px;
+    right: 28px;
+    width: 110px;
+    height: 75px;
+    background-image: url('../../00-Shared-Resources/Assets/logo-ies-sa-colomina-dark.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.85;
+    pointer-events: none;
+  }
+---
+
+![bg opacity:0.35](../../Workshop-1-IT-Troubleshooting-Challenge/Assets/slides/cover-w1.jpg)
+
+# Workshop 4: Linux Server Administration
+
+### Practical Approaches to IT Projects and Problem-Solving
+
+**Agrupamento de Escolas D. Sancho II, Alijó**
+
+*Ponente: Juan José Bonnín Sansó (IES Sa Colomina)*
+
 ---
 
 # Workshop 4: Linux Server Administration
