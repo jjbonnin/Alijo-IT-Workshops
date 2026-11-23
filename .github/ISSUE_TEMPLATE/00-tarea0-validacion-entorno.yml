@@ -51,7 +51,7 @@ body:
     validations:
       required: true
 
-- type: textarea
+  - type: textarea
     id: integrantes
     attributes:
       label: "Integrantes del Equipo y Roles (4–5 miembros)"
