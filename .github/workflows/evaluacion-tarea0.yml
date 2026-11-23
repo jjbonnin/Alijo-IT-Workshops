@@ -43,12 +43,15 @@ jobs:
 
             // 2. Integrantes y roles (20 pts)
             const membersBlock = body.split('### Integrantes del Equipo y Roles')[1]?.split('###')[0] || '';
-            const memberLines = membersBlock.trim().split('\n').filter(l => l.trim().length > 4);
-            if (memberLines.length >= 4) {
+            const roleLines = membersBlock
+              .trim()
+              .split('\n')
+              .filter(l => /^-\s*(Coordinator|Lead Technician|Evidence Recorder|Verifier \/ Auditor|Support \/ Backup[^:]*):\s*\S{2,}/i.test(l.trim()));
+            if (roleLines.length >= 4) {
               autoRaw += 20;
-              autoChecks.push(`✅ **Integrantes y roles (${memberLines.length} miembros):** 20/20`);
+              autoChecks.push(`✅ **Integrantes y roles (${roleLines.length} miembros con nombre asignado):** 20/20`);
             } else {
-              autoChecks.push(`⚠️ **Integrantes insuficientes (${memberLines.length}/4):** Añade 4–5 miembros con sus roles.`);
+              autoChecks.push(`❌ **Faltan nombres en los cargos (${roleLines.length}/4 completados):** Escribe el nombre y @usuario después de \`:\` en al menos 4 roles.`);
             }
 
             // 3. Checklist Base Común (20 pts)
