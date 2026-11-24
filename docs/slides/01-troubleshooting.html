@@ -64,18 +64,22 @@
     }
     .slide.active { display: flex; }
     .slide.center { text-align: center; align-items: center; }
-    .slide.steps-bg {
-      background: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.82)),
-                  url("../assets/images/diagram-7-steps.jpg") center center / cover no-repeat;
+    .slide.cover-bg, .slide.steps-bg {
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
     }
-    .slide.steps-bg pre {
-      background: rgba(9, 13, 22, 0.92);
-    }
     .slide.cover-bg {
-      background: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.65)),
-                  url("../assets/images/cover-w1.jpg") center center / cover no-repeat;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+      background-image: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.82)),
+                        url("../assets/images/cover-w1.jpg");
+    }
+    .slide.steps-bg {
+      background-image: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.82)),
+                        url("../assets/images/diagram-7-steps.jpg");
+    }
+    .slide.cover-bg pre, .slide.steps-bg pre {
+      background: rgba(9, 13, 22, 0.92);
     }
     .split-right {
       display: grid;
