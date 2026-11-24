@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop 2: AI as an IT Technician Assistant — Alijó IT Workshops</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .slide-header {
+      position: fixed;
+      top: 1.8vh;
+      left: 2.2vw;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid #1e293b;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      z-index: 95;
+      pointer-events: none;
+    }
+    .brand-logo {
+      position: fixed;
+      top: 22px;
+      right: 28px;
+      width: 110px;
+      height: 75px;
+      object-fit: contain;
+      opacity: 0.85;
+      z-index: 95;
+      pointer-events: none;
+    }
+    .slide-footer {
+      position: fixed;
+      bottom: 1.8vh;
+      left: 2.2vw;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid #1e293b;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      z-index: 95;
+      pointer-events: none;
+    }
+    .deck { width: 100vw; height: 100vh; position: relative; }
+    .slide {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      padding: 8vh 5vw 8.5vh 5vw;
+      flex-direction: column;
+      justify-content: center;
+      font-size: clamp(16px, 1.48vw, 24px);
+      line-height: 1.42;
+    }
+    .slide.active { display: flex; }
+    .slide.center { text-align: center; align-items: center; }
+    .slide.cover-bg, .slide.audit-bg {
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+    }
+    .slide.cover-bg {
+      background-image: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.82)),
+                        url("../assets/images/cover-w2.jpg");
+    }
+    .slide.audit-bg {
+      background-image: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.82)),
+                        url("../assets/images/diagram-ai-audit.jpg");
+    }
+    .slide.cover-bg pre, .slide.audit-bg pre {
+      background: rgba(9, 13, 22, 0.92);
+    }
+    h1 { font-size: clamp(2.1rem, 3.5vw, 3.5rem); color: #38bdf8; margin-bottom: 0.35em; }
+    h2 {
+      font-size: clamp(1.35rem, 2.25vw, 2.15rem);
+      color: #38bdf8;
+      border-bottom: 2px solid #1e293b;
+      padding-bottom: 0.22em;
+      margin-bottom: 0.55em;
+      width: 100%;
+    }
+    h3 { font-size: clamp(1.05rem, 1.65vw, 1.55rem); color: #e2e8f0; font-weight: 400; margin-bottom: 0.55em; }
+    p { margin-bottom: 0.45em; }
+    ul, ol { margin-left: 1.35em; width: 100%; }
+    li { margin-bottom: 0.38em; }
+    code {
+      background: #1e293b;
+      color: #7dd3fc;
+      padding: 0.1em 0.35em;
+      border-radius: 5px;
+      font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.9em;
+    }
+    pre {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid #334155;
+      border-left: 5px solid #38bdf8;
+      border-radius: 8px;
+      padding: 0.85em 1.05em;
+      margin: 0.45em 0;
+      overflow: auto;
+    }
+    pre code {
+      background: transparent;
+      color: #f8fafc;
+      padding: 0;
+      font-size: clamp(0.82rem, 1.12vw, 1.08rem);
+      line-height: 1.45;
+      display: block;
+      white-space: pre;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.84em; }
+    th, td { padding: 0.45em 0.65em; border-bottom: 1px solid #334155; text-align: left; }
+    th { background: #1e293b; color: #38bdf8; }
+    .box {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.9);
+      border-left: 5px solid #38bdf8;
+      padding: 0.75em 1.1em;
+      border-radius: 8px;
+      margin-top: 0.5em;
+    }
+    .warn { border-left-color: #f59e0b; }
+    .small { font-size: 0.78em; color: #cbd5e1; }
+    aside.notes { display: none; }
+    .controls {
+      position: fixed;
+      bottom: 1.5vh;
+      right: 2vw;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid #334155;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      z-index: 100;
+    }
+    .controls button, .controls a {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 0.25rem 0.65rem;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .controls button:hover, .controls a:hover { background: #334155; }
+  </style>
+</head>
+<body>
+  <header class="slide-header">Alijó IT Workshops | Workshop 2: AI as an IT Technician Assistant</header>
+  <img class="brand-logo" src="../assets/images/logo-ies-sa-colomina-dark.jpg" alt="IES Sa Colomina">
+
+  <div class="deck">
+
+    <!-- Portada -->
+    <section class="slide center cover-bg active">
+      <h1>Workshop 2: AI as an IT Technician Assistant</h1>
+      <h3>Artificial Intelligence and its Applications in IT</h3>
+      <p><strong>Agrupamento de Escolas D. Sancho II, Alijó</strong></p>
+      <p><em>Ponente: Juan José Bonnín Sansó (IES Sa Colomina)</em></p>
+      <aside class="notes">
+        <strong>Portada:</strong> Presentación del Taller 2 y bienvenida al Agrupamento de Escolas D. Sancho II, Alijó.
+      </aside>
+    </section>
+
+    <!-- Slide 0 -->
+    <section class="slide cover-bg">
+      <h2>0. Workshop 2: AI as an IT Technician Assistant</h2>
+      <h3>Practical Approaches to IT Projects and Problem-Solving</h3>
+      <p><strong>Alijó IT Workshops</strong></p>
+      <ul>
+        <li><strong>Duration:</strong> 180 Minutes (3 Hours)</li>
+        <li><strong>Format:</strong> Team-based Hands-On Lab (4–5 students per team)</li>
+        <li><strong>Environment:</strong> Ubuntu Desktop VM + Approved AI Assistant</li>
+      </ul>
+      <p class="small" style="margin-top: 1.2em;">Controles: Flechas <code>←</code> <code>→</code> · <code>S</code> Vista del orador · <code>F11</code> Pantalla completa</p>
+      <aside class="notes">
+        <strong>Notas del orador (00–05 min):</strong><br>
+        • Da la bienvenida al Taller 2 y plantea la idea central: la IA es un copiloto muy rápido, pero no tiene acceso real a tu máquina ni asume responsabilidad si un comando borra datos.<br>
+        • El técnico sigue siendo el piloto responsable de cada comando que entra en la terminal.
+      </aside>
+    </section>
+
+    <!-- Slide 1 -->
+    <section class="slide">
+      <h2>1. Mission & Learning Outcomes</h2>
+      <p>By the end of this 3-hour workshop, your team will be able to:</p>
+      <ol>
+        <li><strong>Craft Evidence-First Prompts</strong> containing real OS context, error logs, and safety constraints.</li>
+        <li><strong>Audit AI-generated commands and scripts</strong> line by line <em>before</em> execution.</li>
+        <li><strong>Detect AI hallucinations, deprecated flags, and dangerous shortcuts</strong> (<code>rm -rf</code>, <code>chmod 777</code>, <code>curl | bash</code>).</li>
+        <li><strong>Debug broken Python/Bash utilities</strong> iteratively using real execution tracebacks.</li>
+        <li><strong>Document every AI interaction and verification test</strong> transparently in an audit log.</li>
+      </ol>
+      <aside class="notes">
+        <strong>Notas del orador (05–10 min):</strong><br>
+        • Recalca que copiar y pegar a ciegas desde el chat a la terminal es la causa número uno de incidentes graves con asistentes de IA.
+      </aside>
+    </section>
+
+    <!-- Slide 2 -->
+    <section class="slide">
+      <h2>2. Three-Hour Session Roadmap (180 Min)</h2>
+      <table>
+        <thead>
+          <tr><th>Block</th><th>Duration</th><th>Activity</th><th>Team Deliverable</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1</strong></td><td>15 min</td><td>Briefing, AI safety rules & team role assignment</td><td>Roles assigned</td></tr>
+          <tr><td><strong>2</strong></td><td>25 min</td><td>Evidence-First Prompting & Pre-Execution Audit rules</td><td>Method check</td></tr>
+          <tr><td><strong>3</strong></td><td>20 min</td><td>VM Baseline & Scenario asset inspection</td><td>Baseline ready</td></tr>
+          <tr><td><strong>4</strong></td><td>65 min</td><td><strong>4 Progressive AI Scenarios</strong> (Logs, Python, Safety Trap, Admin)</td><td><code>Prompt-Record.md</code></td></tr>
+          <tr><td><strong>5</strong></td><td>35 min</td><td>Final verification & AI Audit Report completion</td><td><code>Final-Report.md</code></td></tr>
+          <tr><td><strong>6</strong></td><td>20 min</td><td>Team debriefs & lessons learned</td><td>3-min pitch</td></tr>
+        </tbody>
+      </table>
+      <aside class="notes">
+        <strong>Notas del orador (10–12 min):</strong><br>
+        • Advierte de que uno de los escenarios contiene una trampa deliberada de seguridad para comprobar si auditan antes de ejecutar.
+      </aside>
+    </section>
+
+    <!-- Slide 3 -->
+    <section class="slide">
+      <h2>3. Team Roles & AI Governance</h2>
+      <p>Every team (4–5 members) divides responsibility to prevent blind execution:</p>
+      <ul>
+        <li><strong>Team Coordinator:</strong> Enforces timeboxes and ensures the team reviews every AI output before running it. <em>(Combines with Reporter in teams of 4)</em>.</li>
+        <li><strong>Prompt Engineer:</strong> Writes structured, context-rich prompts using real CLI outputs (never sensitive credentials).</li>
+        <li><strong>Security & Code Auditor:</strong> Inspects every AI-suggested command/script for destructive flags, hardcoded secrets, or side effects.</li>
+        <li><strong>Lead Technician:</strong> Executes <strong>only approved</strong> commands in the Ubuntu VM and captures outputs.</li>
+        <li><strong>Reporter:</strong> Documents prompts, AI flaws caught, fixes, and final proof.</li>
+      </ul>
+      <aside class="notes">
+        <strong>Notas del orador (12–15 min):</strong><br>
+        • Insiste en que ningún comando generado por IA puede ejecutarse sin el visto bueno explícito del Security & Code Auditor del equipo.
+      </aside>
+    </section>
+
+    <!-- Slide 4 -->
+    <section class="slide">
+      <h2>4. Non-Negotiable AI Safety Rules</h2>
+      <ol>
+        <li><strong>Snapshot First:</strong> Verify <code>BASELINE – BEFORE WORKSHOP</code> exists in VirtualBox before starting.</li>
+        <li><strong>Never Paste Blindly:</strong> Read every flag (<code>man <cmd></code> or <code><cmd> --help</code>) before running an AI command.</li>
+        <li><strong>Zero Blind Pipe-to-Shell:</strong> Never run <code>curl ... | sudo bash</code> or download unverified third-party scripts.</li>
+        <li><strong>No Destructive Shortcuts:</strong> Reject any AI suggestion using <code>chmod 777</code>, <code>ufw disable</code>, or recursive <code>rm -rf</code> on system folders.</li>
+        <li><strong>Protect Secrets & PII:</strong> Never paste real passwords, private SSH keys, or personal data into external AI chats.</li>
+      </ol>
+      <aside class="notes">
+        <strong>Notas del orador (15–20 min):</strong><br>
+        • Muestra un ejemplo real de cómo una IA puede inventar un parámetro inexistente o sugerir <code>chmod 777</code> para "arreglar rápido" un error de permisos.
+      </aside>
+    </section>
+
+    <!-- Slide 5 -->
+    <section class="slide">
+      <h2>5. Anatomy of an Evidence-First Prompt</h2>
+      <p>Stop asking vague questions (<em>"Why doesn't my script work?"</em>). Use the <strong>4-Part Context Formula</strong>:</p>
+      <pre><code>1. [ENVIRONMENT]  Ubuntu 22.04 LTS, Python 3.10, non-root user with sudo.
+2. [SYMPTOM/LOGS] Exact command run + verbatim stderr/traceback output.
+3. [CONSTRAINTS]  Must keep ufw enabled, no chmod 777, explain each flag.
+4. [OUTPUT ASK]   Give a minimal diagnostic check first before any fix.</code></pre>
+      <div class="box">
+        <strong>Result:</strong> Accurate, reproducible answers instead of generic guesses.
+      </div>
+      <aside class="notes">
+        <strong>Notas del orador (20–35 min):</strong><br>
+        • Pide a los equipos que usen exactamente esta plantilla de 4 bloques en su primera consulta del Escenario 1.
+      </aside>
+    </section>
+
+    <!-- Slide 6 (con diagrama diagram-ai-audit.jpg disimulado de fondo) -->
+    <section class="slide audit-bg">
+      <h2>6. The Pre-Execution Audit Checklist</h2>
+      <p>Before pressing <strong>Enter</strong> on any AI-generated snippet, verify <strong>5 questions</strong>:</p>
+      <table>
+        <thead>
+          <tr><th>Check</th><th>Question to Ask</th><th>Red Flag Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1. Scope</strong></td><td>Does it touch only the intended files/services?</td><td><code>rm -rf *</code> run in the wrong directory</td></tr>
+          <tr><td><strong>2. Flags</strong></td><td>Do all flags actually exist in this Ubuntu version?</td><td>Hallucinated CLI options</td></tr>
+          <tr><td><strong>3. Privileges</strong></td><td>Does it really need <code>sudo</code>, or can it run as user?</td><td>Running a Python parser as <code>root</code></td></tr>
+          <tr><td><strong>4. Permissions</strong></td><td>Does it follow least privilege (<code>640</code>/<code>644</code>/<code>750</code>)?</td><td>Suggesting <code>chmod 777</code></td></tr>
+          <tr><td><strong>5. Reversibility</strong></td><td>Can we undo it or test with <code>--dry-run</code> first?</td><td>Overwriting configs without <code>.bak</code></td></tr>
+        </tbody>
+      </table>
+      <aside class="notes">
+        <strong>Notas del orador (35–40 min):</strong><br>
+        • Recuerda que en el <code>Prompt-and-Results-Record.md</code> deben anotar qué revisaron antes de ejecutar cada bloque.
+      </aside>
+    </section>
+
+    <!-- Slide 7 -->
+    <section class="slide">
+      <h2>7. Workshop Scenarios Overview (65 Min)</h2>
+      <p>Your team will work through <strong>4 progressive scenarios</strong>:</p>
+      <ol>
+        <li><strong>Scenario 01 — Log & Service Triage:</strong> Feed real <code>journalctl</code> / service errors to AI to isolate a failing background service without breaking dependencies.</li>
+        <li><strong>Scenario 02 — Debugging <code>diagnostic_script.py</code>:</strong> Use AI to identify syntax, logic, and exception-handling bugs in a broken Python monitoring script, then verify locally.</li>
+        <li><strong>Scenario 03 — The AI Safety Trap:</strong> Evaluate an AI-proposed remediation plan containing subtle security flaws and destructive commands — <strong>catch and rewrite it safely</strong>.</li>
+        <li><strong>Scenario 04 — Automated Admin Task:</strong> Co-design a clean, idempotent Bash health check with AI and validate edge cases.</li>
+      </ol>
+      <aside class="notes">
+        <strong>Notas del orador (40–105 min):</strong><br>
+        • Supervisa especialmente el Escenario 03: observa qué equipos detectan la trampa sin ejecutarla y qué equipos necesitan una pregunta guía.
+      </aside>
+    </section>
+
+    <!-- Slide 8 -->
+    <section class="slide">
+      <h2>8. Iterative Debugging Loop with AI</h2>
+      <p>When AI-generated code fails on the first run:</p>
+      <pre><code>[Run Code in VM] ──▶ [Capture Exact Traceback] ──▶ [Feed Error + Line # to AI]
+        ▲                                                      │
+        └────────── [Audit Diff & Re-Test Locally] ◀───────────┘</code></pre>
+      <ul>
+        <li><strong>Never say:</strong> <em>"It still gives an error, fix it."</em></li>
+        <li><strong>Always provide:</strong> Exact line number, full traceback, and what changed since the previous test.</li>
+      </ul>
+      <aside class="notes">
+        <strong>Notas del orador (70–90 min):</strong><br>
+        • Refuerza este flujo durante el Escenario 02 (<code>diagnostic_script.py</code>), donde suelen aparecer 2 o 3 errores encadenados.
+      </aside>
+    </section>
+
+    <!-- Slide 9 -->
+    <section class="slide">
+      <h2>9. Documentation & Grading Rubric (100 Points)</h2>
+      <p>Your <code>Prompt-and-Results-Record.md</code> and <code>Final-Report.md</code> must prove <strong>critical human oversight</strong>:</p>
+      <ul>
+        <li><strong>Evidence-First Prompting Quality:</strong> 25 pts</li>
+        <li><strong>Pre-Execution Security & Accuracy Audit:</strong> 30 pts</li>
+        <li><strong>Technical Execution & Verification Proof:</strong> 25 pts</li>
+        <li><strong>Critical Reflection & Final Report:</strong> 20 pts</li>
+      </ul>
+      <div class="box warn">
+        <strong>Automatic Penalty (-15 pts):</strong> Executing destructive or insecure AI commands (<code>chmod 777</code>, disabling firewalls, unverified <code>rm -rf</code>) without catching them during the audit.
+      </div>
+      <aside class="notes">
+        <strong>Notas del orador (105–180 min):</strong><br>
+        • Dedica los últimos 20 minutos a que cada equipo muestre un fallo o alucinación real que haya cazado a la IA durante la sesión.
+      </aside>
+    </section>
+
+  </div>
+
+  <footer class="slide-footer">Artificial Intelligence and its Applications in IT</footer>
+
+  <div class="controls">
+    <a href="../index.html" title="Índice">⌂</a>
+    <button onclick="go(-1)" title="Anterior (←)">◀</button>
+    <span id="counter">1 / 11</span>
+    <button onclick="go(1)" title="Siguiente (→)">▶</button>
+    <button onclick="openSpeakerView()" title="Vista del Orador (S)">🎤 Orador</button>
+    <button onclick="toggleFull()" title="Pantalla completa">⛶</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const channel = ('BroadcastChannel' in window) ? new BroadcastChannel('alijo-w2-deck') : null;
+    let speakerWin = null;
+    let idx = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.replace('#', ''), 10) || 1) - 1));
+
+    function getSlideTitle(slideEl, i) {
+      const h = slideEl.querySelector('h1, h2');
+      return h ? h.textContent.trim() : `Slide ${i + 1}`;
+    }
+
+    function getSlideNotes(slideEl) {
+      const aside = slideEl.querySelector('aside.notes');
+      return aside ? aside.innerHTML.trim() : '<em>Sin notas adicionales para esta diapositiva.</em>';
+    }
+
+    function syncSpeakerView() {
+      if (!speakerWin || speakerWin.closed) return;
+      const doc = speakerWin.document;
+      const curTitle = doc.getElementById('sp-cur-title');
+      if (!curTitle) return;
+      curTitle.textContent = `${idx + 1} / ${slides.length} — ${getSlideTitle(slides[idx], idx)}`;
+      doc.getElementById('sp-cur-body').innerHTML = slides[idx].innerHTML;
+      doc.getElementById('sp-notes').innerHTML = getSlideNotes(slides[idx]);
+      if (idx + 1 < slides.length) {
+        doc.getElementById('sp-next-title').textContent = `Siguiente (${idx + 2}/${slides.length}): ${getSlideTitle(slides[idx + 1], idx + 1)}`;
+        doc.getElementById('sp-next-body').innerHTML = slides[idx + 1].innerHTML;
+      } else {
+        doc.getElementById('sp-next-title').textContent = 'Fin de la presentación';
+        doc.getElementById('sp-next-body').innerHTML = '<p style="color:#94a3b8">Última diapositiva alcanzada.</p>';
+      }
+    }
+
+    function render(broadcast = true) {
+      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      document.getElementById('counter').textContent = `${idx + 1} / ${slides.length}`;
+      history.replaceState(null, '', `#${idx + 1}`);
+      localStorage.setItem('alijo-w2-slide', String(idx));
+      if (broadcast && channel) channel.postMessage({ type: 'goto', idx });
+      syncSpeakerView();
+    }
+
+    function go(delta) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx + delta));
+      render(true);
+    }
+
+    function toggleFull() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+
+    function openSpeakerView() {
+      if (speakerWin && !speakerWin.closed) {
+        speakerWin.focus();
+        syncSpeakerView();
+        return;
+      }
+      speakerWin = window.open('', 'AlijoSpeakerViewW2', 'width=1100,height=720');
+      if (!speakerWin) {
+        alert('El navegador bloqueó la ventana emergente. Permite pop-ups para este sitio o pulsa "🎤 Orador".');
+        return;
+      }
+      speakerWin.document.write(`<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Vista del Orador — Workshop 2</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #090d16; color: #f8fafc; font-family: system-ui, sans-serif; height: 100vh; display: grid; grid-template-rows: 54px 1fr; }
+    header { background: #1e293b; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; padding: 0 1.2rem; }
+    .timer { font-family: monospace; font-size: 1.35rem; color: #38bdf8; font-weight: 700; }
+    button { background: #0f172a; color: #38bdf8; border: 1px solid #334155; border-radius: 6px; padding: 0.35rem 0.75rem; cursor: pointer; font-weight: 700; margin-left: 0.4rem; }
+    button:hover { background: #334155; }
+    main { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1rem; padding: 1rem; overflow: hidden; }
+    .col { display: flex; flex-direction: column; gap: 1rem; overflow: hidden; }
+    .panel { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 0.9rem; overflow-y: auto; }
+    .panel h4 { color: #38bdf8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.6rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.3rem; }
+    .preview { font-size: 0.82rem; line-height: 1.35; }
+    .preview img { max-width: 100%; max-height: 140px; object-fit: contain; margin-top: 0.4rem; }
+    .preview aside.notes { display: none; }
+    .preview pre { background: #090d16; padding: 0.5rem; border-radius: 6px; margin-top: 0.4rem; font-size: 0.75rem; }
+    .preview table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .preview th, .preview td { border-bottom: 1px solid #334155; padding: 0.25rem; text-align: left; }
+    .notes-box { flex: 1; font-size: 1.12rem; line-height: 1.55; color: #fef08a; background: #171712; border-color: #854d0e; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><strong>Vista del Orador</strong> · <span id="sp-cur-title"></span></div>
+    <div>
+      <span class="timer" id="sp-timer">00:00:00</span>
+      <button onclick="resetTimer()">Reiniciar reloj</button>
+      <button onclick="window.opener && window.opener.go(-1)">◀ Anterior</button>
+      <button onclick="window.opener && window.opener.go(1)">Siguiente ▶</button>
+    </div>
+  </header>
+  <main>
+    <div class="col">
+      <div class="panel" style="flex:1">
+        <h4>Diapositiva Actual</h4>
+        <div class="preview" id="sp-cur-body"></div>
+      </div>
+      <div class="panel" style="flex:0.85">
+        <h4 id="sp-next-title">Siguiente</h4>
+        <div class="preview" id="sp-next-body"></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="panel notes-box">
+        <h4>Notas del Orador</h4>
+        <div id="sp-notes"></div>
+      </div>
+    </div>
+  </main>
+  <script>
+    let start = Date.now();
+    function resetTimer() { start = Date.now(); }
+    setInterval(() => {
+      const s = Math.floor((Date.now() - start) / 1000);
+      const hh = String(Math.floor(s / 3600)).padStart(2, '0');
+      const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+      const ss = String(s % 60).padStart(2, '0');
+      document.getElementById('sp-timer').textContent = hh + ':' + mm + ':' + ss;
+    }, 500);
+    document.addEventListener('keydown', e => {
+      if (!window.opener) return;
+      if (['ArrowRight', 'PageDown', ' '].includes(e.key)) window.opener.go(1);
+      if (['ArrowLeft', 'PageUp'].includes(e.key)) window.opener.go(-1);
+    });
+  <\/script>
+</body>
+</html>`);
+      speakerWin.document.close();
+      syncSpeakerView();
+    }
+
+    if (channel) {
+      channel.onmessage = e => {
+        if (e.data && e.data.type === 'goto') {
+          idx = e.data.idx;
+          render(false);
+        }
+      };
+    }
+
+    document.addEventListener('keydown', e => {
+      if (['ArrowRight', 'PageDown', ' '].includes(e.key)) go(1);
+      if (['ArrowLeft', 'PageUp'].includes(e.key)) go(-1);
+      if (e.key === 's' || e.key === 'S') openSpeakerView();
+    });
+
+    render(false);
+  </script>
+</body>
+</html>
