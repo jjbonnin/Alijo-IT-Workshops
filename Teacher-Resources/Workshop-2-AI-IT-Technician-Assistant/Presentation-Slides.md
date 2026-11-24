@@ -239,3 +239,25 @@ Your `Prompt-and-Results-Record.md` and `Final-Report.md` must prove **critical 
 Notas del orador (105–180 min):
 - Dedica los últimos 20 minutos a que cada equipo muestre un fallo o alucinación real que haya cazado a la IA durante la sesión.
 -->
+
+---
+
+![bg right:32% fit](../../00-Shared-Resources/Assets/speaker-jbonnin.jpg.JPG)
+
+## About the Speaker | Juan José Bonnín Sansó
+
+**IT & Vocational Education Teacher (SMX / ASIX) — IES Sa Colomina (Eivissa)**
+
+* **Engineering & Teaching Background:** Engineer and Computer Science / ICT educator since 2015, specialising in Network Services (*Serveis en Xarxa*), Operating Systems, Markup Languages, and Database Administration.
+* **E-Learning & Digital Coordination:** Master's in Education & ICT (UOC), former ICT Coordinator, Google Workspace for Education trainer, and co-founder of *TIC Natur – Solucions Formatives*.
+* **Beyond the Classroom:** Regional basketball referee (CBAB) since 1985, National Volleyball Referee (**NIII-C**), and licensed coastal skipper.
+
+### Contact & Links
+* **Email:** [jjbonninsanso@educaib.eu](mailto:jjbonninsanso@educaib.eu)
+* **Web Profile:** [https://about.me/jbonnins](https://about.me/jbonnins)
+* **Host Institution:** Agrupamento de Escolas D. Sancho II, Alijó (Portugal)
+
+<!--
+Notas del orador (Cierre):
+- Agradece la acogida al Agrupamento de Escolas D. Sancho II (Alijó) y deja proyectados tus datos de contacto y el perfil about.me/jbonnins para futuras colaboraciones.
+-->
