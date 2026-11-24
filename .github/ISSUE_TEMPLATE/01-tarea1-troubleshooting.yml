@@ -17,8 +17,8 @@ body:
     attributes:
       label: "Turno"
       options:
-        - "Turno A (08:25 - 10:10)"
-        - "Turno B (10:30 - 12:15)"
+        - "Turno A (13:20 - 15:05)"
+        - "Turno B (15:15 - 17:00)"
     validations:
       required: true
 
