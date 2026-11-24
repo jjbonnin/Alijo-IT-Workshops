@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alijó IT Workshops — Presentaciones</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 2rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #38bdf8; margin-bottom: 0.25rem; }
+    p.subtitle { color: #94a3b8; margin-top: 0; margin-bottom: 2rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.15s, border-color 0.15s; }
+    .card:hover { transform: translateY(-3px); border-color: #38bdf8; }
+    .badge { display: inline-block; background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.75rem; }
+    .card h2 { margin: 0 0 0.5rem 0; font-size: 1.2rem; color: #f1f5f9; }
+    .card p { margin: 0; font-size: 0.9rem; color: #cbd5e1; line-height: 1.45; }
+    .footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
+    .footer a { color: #38bdf8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Alijó IT Workshops</h1>
+    <p class="subtitle">Material de proyección en aula · Grupos A1–A6 y B1–B6</p>
+    <div class="grid">
+      <a class="card" href="./slides/01-troubleshooting.html">
+        <span class="badge">TALLER 1 · W1</span>
+        <h2>IT Troubleshooting Challenge</h2>
+        <p>Metodología de diagnóstico en 7 pasos, línea base en Ubuntu, 6 incidentes prácticos y entrega en GitHub.</p>
+      </a>
+      <a class="card" href="./slides/02-ai-assistant.html">
+        <span class="badge">TALLER 2 · W2</span>
+        <h2>AI IT Technician Assistant</h2>
+        <p>Diagnóstico asistido por IA, scripts en Python y validación crítica (Trust or Verify).</p>
+      </a>
+      <a class="card" href="./slides/03-networking.html">
+        <span class="badge">TALLER 3 · W3</span>
+        <h2>Build & Configure Network</h2>
+        <p>Infraestructura de red física vs. simulada, direccionamiento IP, enrutamiento y conectividad.</p>
+      </a>
+      <a class="card" href="./slides/04-linux-server.html">
+        <span class="badge">TALLER 4 · W4</span>
+        <h2>Linux Server Administration</h2>
+        <p>Servicios systemd, firewall UFW, permisos, monitorización y automatización en servidor Linux.</p>
+      </a>
+    </div>
+    <div class="footer">
+      Repositorios y entregas: <a href="https://github.com/jjbonnin/Alijo-IT-Workshops">github.com/jjbonnin/Alijo-IT-Workshops</a> ·
+      <a href="https://github.com/jjbonnin/Alijo-IT-Workshops/blob/main/00-Shared-Resources/Guia-Entregas-y-Peer-Review.md">Guía de Entregas y Peer-Review</a>
+    </div>
+  </div>
+</body>
+</html>
