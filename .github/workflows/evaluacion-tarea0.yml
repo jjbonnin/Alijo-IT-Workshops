@@ -1,47 +1,49 @@
-name: Evaluación Automática y Docente (Tarea 0)
+name: "Evaluación Automática y Docente (Tarea 0)"
 
 on:
   issues:
-    types: [opened, edited, labeled]
+    types: [opened, edited, labeled, unlabeled]
   issue_comment:
     types: [created, edited]
 
 permissions:
   issues: write
+  contents: read
 
 jobs:
   evaluar-tarea-0:
     if: contains(github.event.issue.labels.*.name, 'tarea-0')
     runs-on: ubuntu-latest
     steps:
-      - name: Calcular notas A (100% o 40%) y T (60%) según taller
+      - name: Evaluar Tarea 0 (100% Auto por defecto | 40% Auto + 60% Profesor si hay revisión docente)
         uses: actions/github-script@v7
         with:
           script: |
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+            const title = issue.title || '';
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const issue = context.payload.issue;
             const issueNumber = issue.number;
-            const body = issue.body || '';
-            const currentLabels = issue.labels.map(l => l.name);
 
-            const grupoMatch = body.match(/### Identificador de Grupo[^\n]*\n+([AB][1-6])/);
-            const grupo = grupoMatch ? grupoMatch[1].trim() : null;
-            const tallerMatch = body.match(/### Taller que vais a realizar[^\n]*\n+(W[1-4])/);
-            const taller = tallerMatch ? tallerMatch[1].trim() : null;
+            // Extraer campos del formulario
+            const turnoMatch = body.match(/### Turno\s+Turno\s+([AB])/i);
+            const turno = turnoMatch ? turnoMatch[1].toUpperCase() : null;
+
+            const grupoMatch = body.match(/### Identificador de Grupo[^\n]*\n+([AB][1-6])/i);
+            const grupo = grupoMatch ? grupoMatch[1].toUpperCase() : null;
+
+            const tallerMatch = body.match(/### Taller que vais a realizar\s+(W[1-4])/i);
+            const taller = tallerMatch ? tallerMatch[1].toUpperCase() : null;
+
+            const titleGrupoMatch = title.match(/\[Grupo-([AB][1-6])\]/i);
+            const titleGrupo = titleGrupoMatch ? titleGrupoMatch[1].toUpperCase() : null;
 
             let autoRaw = 0;
             const autoChecks = [];
 
-            const turnoMatch = body.match(/### Turno\s+Turno\s+([AB])/i);
-            const turno = turnoMatch ? turnoMatch[1].toUpperCase() : null;
-
-            // 1. Coherencia completa: Título [Grupo-XX] === Desplegable Grupo === Turno y Taller (20 pts)
-            const titleGrupoMatch = (issue.title || '').match(/\[Grupo-([AB][1-6])\]/i);
-            const titleGrupo = titleGrupoMatch ? titleGrupoMatch[1].toUpperCase() : null;
-            const turnoPrefix = turno === 'A' ? 'A' : (turno === 'B' ? 'B' : null);
-            const turnoCoherente = !turnoPrefix || (grupo && grupo.startsWith(turnoPrefix));
-
+            // 1. Coherencia Título [Grupo-XX] === Desplegable Grupo === Turno y Taller (20 pts)
+            const turnoCoherente = !turno || (grupo && grupo.startsWith(turno));
             if (grupo && taller && titleGrupo === grupo && turnoCoherente) {
               autoRaw += 20;
               autoChecks.push(`✅ **Identificación coherente (Título \`[Grupo-${titleGrupo}]\`, desplegable \`${grupo}\`, Turno ${turno} y ${taller}):** 20/20`);
@@ -55,135 +57,150 @@ jobs:
               autoChecks.push(`❌ **Grupo o Taller no detectado:** Selecciona A1–A6/B1–B6 y W1–W4 (0/20).`);
             }
 
-            // 2. Integrantes y roles (20 pts)
+            // 2. Integrantes y roles con nombres reales (20 pts)
             const membersBlock = body.split('### Integrantes del Equipo y Roles')[1]?.split('###')[0] || '';
             const roleLines = membersBlock
               .trim()
               .split('\n')
               .filter(l => /^-\s*(Coordinator|Lead Technician|Evidence Recorder|Verifier \/ Auditor|Support \/ Backup[^:]*):\s*\S{2,}/i.test(l.trim()));
+
             if (roleLines.length >= 4) {
               autoRaw += 20;
               autoChecks.push(`✅ **Integrantes y roles (${roleLines.length} miembros con nombre asignado):** 20/20`);
             } else {
-              autoChecks.push(`❌ **Faltan nombres en los cargos (${roleLines.length}/4 completados):** Escribe el nombre y @usuario después de \`:\` en al menos 4 roles.`);
+              autoChecks.push(`❌ **Faltan nombres en los cargos (${roleLines.length}/4 completados):** Escribe nombre y @usuario tras \`:\` en al menos 4 roles (0/20).`);
             }
 
-            // 3. Checklist Base Común (20 pts)
-            const baseBlock = body.split('### 1. Requisitos Base Comunes')[1]?.split('###')[0] || '';
-            const baseChecked = (baseBlock.match(/- \[X\]/gi) || []).length;
+            // 3. Requisitos Base Comunes (20 pts)
+            const baseChecked = (body.match(/- \[x\] (?:VirtualBox|Snapshot|Acceso)/gi) || []).length;
             if (baseChecked >= 3) {
               autoRaw += 20;
-              autoChecks.push(`✅ **Requisitos Base Comunes (${baseChecked}/3):** 20/20`);
+              autoChecks.push(`✅ **Requisitos base comunes (3/3):** 20/20`);
             } else {
-              autoChecks.push(`❌ **Requisitos Base incompletos (${baseChecked}/3):** Marca las 3 casillas comunes.`);
+              autoChecks.push(`❌ **Requisitos base incompletos (${baseChecked}/3):** Marca VirtualBox, Snapshot y Acceso (0/20).`);
             }
 
-            // 4. Checklist Específico del Taller seleccionado (20 pts)
-            const specBlock = body.split('### 2. Requisito Específico del Taller')[1]?.split('###')[0] || '';
-            const specRegex = taller ? new RegExp(`- \\[X\\]\\s*\\[${taller}`, 'i') : null;
-            if (specRegex && specRegex.test(specBlock)) {
+            // 4. Requisito Específico del Taller seleccionado (20 pts)
+            const specChecked = body.match(/- \[x\] \[(W[1-4])[^\]]*\]/gi) || [];
+            if (specChecked.length === 1 && taller && specChecked[0].toUpperCase().includes(`[${taller}`)) {
               autoRaw += 20;
-              autoChecks.push(`✅ **Requisito específico de ${taller} marcado:** 20/20`);
+              autoChecks.push(`✅ **Requisito específico de ${taller} verificado:** 20/20`);
+            } else if (specChecked.length > 1) {
+              autoChecks.push(`❌ **Múltiples talleres marcados (${specChecked.length}):** Marca SOLO la casilla de ${taller || 'tu taller'} (0/20).`);
             } else {
-              autoChecks.push(`❌ **Requisito específico faltante:** Marca la casilla correspondiente a **[${taller || 'W1–W4'}]** en la sección 2.`);
+              autoChecks.push(`❌ **Falta requisito específico de ${taller || 'tu taller'}:** Marca su casilla correspondiente (0/20).`);
             }
 
-            // 5. Evidencia técnica CLI adaptada al taller (20 pts)
-            const hasIPv4 = /\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(body);
-            const hasDisk = /(Use%|Avail|Mounted on|\/dev\/)/i.test(body);
+            // 5. Evidencia Técnica CLI (20 pts)
+            const cliBlock = body.split('### Evidencia Técnica de Validación')[1] || '';
+            const hasIp = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/.test(cliBlock);
+            const hasDisk = /(\/\s*$|Use%|Filesystem)/m.test(cliBlock);
             let specEvidenceOk = true;
-            let specEvidenceNote = '';
+            let specEvidenceMsg = 'IPv4 y disco detectados';
 
             if (taller === 'W3') {
-              specEvidenceOk = /packettracer/i.test(body);
-              specEvidenceNote = specEvidenceOk ? ' + Packet Tracer detectado' : ' (falta salida de `which packettracer`)';
+              specEvidenceOk = /packettracer/i.test(cliBlock);
+              specEvidenceMsg = specEvidenceOk ? 'IPv4, disco y Packet Tracer detectados' : 'falta salida de `which packettracer`';
             } else if (taller === 'W4') {
-              specEvidenceOk = /SUDO_OK/i.test(body);
-              specEvidenceNote = specEvidenceOk ? ' + Sudo verificado' : ' (falta `SUDO_OK`)';
+              specEvidenceOk = /SUDO_OK/i.test(cliBlock);
+              specEvidenceMsg = specEvidenceOk ? 'IPv4, disco y `SUDO_OK` detectados' : 'falta confirmación `SUDO_OK`';
             }
 
-            if (hasIPv4 && hasDisk && specEvidenceOk) {
+            if (hasIp && hasDisk && specEvidenceOk) {
               autoRaw += 20;
-              autoChecks.push(`✅ **Evidencia CLI de ${taller || 'VM'} válida (IPv4 + Disco${specEvidenceNote}):** 20/20`);
+              autoChecks.push(`✅ **Evidencia CLI válida (${specEvidenceMsg}):** 20/20`);
             } else {
-              autoChecks.push(`❌ **Evidencia CLI incompleta${specEvidenceNote}:** Ejecuta exactamente el comando indicado para ${taller || 'tu taller'}.`);
+              autoChecks.push(`❌ **Evidencia CLI insuficiente (${specEvidenceMsg}):** Pega la salida real del comando indicado (0/20).`);
             }
 
-            // Leer comentarios para calificación docente
+            // Comprobar si hay revisión docente (etiqueta teacher-review o comentario TEACHER-SCORE: XX)
+            const labels = issue.labels.map(l => l.name);
             const { data: comments } = await github.rest.issues.listComments({
-              owner, repo, issue_number: issueNumber
+              owner,
+              repo,
+              issue_number: issueNumber
             });
 
-            let teacherRaw = null;
+            let teacherScore = null;
             for (const c of comments) {
-              if (c.user.type === 'Bot') continue;
-              const tMatch = c.body.match(/TEACHER-SCORE:\s*(\d{1,3})/i);
-              if (tMatch) {
-                teacherRaw = Math.min(100, Math.max(0, parseInt(tMatch[1], 10)));
+              if (c.user?.type === 'Bot') continue;
+              const match = c.body?.match(/TEACHER-SCORE:\s*(\d{1,3})/i);
+              if (match) {
+                teacherScore = Math.min(100, Math.max(0, parseInt(match[1], 10)));
               }
             }
 
-            const hasTeacher = currentLabels.includes('teacher-review') || teacherRaw !== null;
-            const tScore = teacherRaw !== null ? teacherRaw : 0;
-
+            const hasTeacherReview = labels.includes('teacher-review') || teacherScore !== null;
             let finalScore = 0;
-            let formulaText = '';
+            let modeText = '';
+            let breakdownRows = '';
 
-            if (hasTeacher) {
-              const aWeighted = +(autoRaw * 0.40).toFixed(1);
-              const tWeighted = +(tScore * 0.60).toFixed(1);
-              finalScore = +(aWeighted + tWeighted).toFixed(1);
-              formulaText = `**Modo con Revisión Docente (40% A + 60% T):**\n` +
-                `- 🤖 Automática (40%): **${aWeighted} / 40 pts** *(Base: ${autoRaw}/100)*\n` +
-                `- 🎓 Profesor (60%): **${tWeighted} / 60 pts** ${teacherRaw !== null ? `*(Base: ${teacherRaw}/100)*` : '*(Pendiente de TEACHER-SCORE)*'}`;
+            if (hasTeacherReview) {
+              const autoWeighted = +(autoRaw * 0.4).toFixed(1);
+              const teacherWeighted = teacherScore !== null ? +(teacherScore * 0.6).toFixed(1) : 0;
+              finalScore = +(autoWeighted + teacherWeighted).toFixed(1);
+              modeText = '40% Automática + 60% Profesor';
+              breakdownRows =
+                `| Evaluación Automática (40%) | ${autoRaw} / 100 | **${autoWeighted} / 40 pts** |\n` +
+                `| Evaluación Profesor (60%) | ${teacherScore !== null ? `${teacherScore} / 100` : 'Pendiente (`TEACHER-SCORE: XX`)'} | **${teacherWeighted} / 60 pts** |`;
             } else {
               finalScore = autoRaw;
-              formulaText = `**Modo Automático Estándar (100% A):**\n` +
-                `- 🤖 Automática (100%): **${finalScore} / 100 pts**`;
+              modeText = '100% Automática';
+              breakdownRows = `| Evaluación Automática (100%) | ${autoRaw} / 100 | **${finalScore} / 100 pts** |`;
             }
 
+            const passed = autoRaw >= 80 && (!hasTeacherReview || (teacherScore !== null && finalScore >= 60));
+
+            // Actualizar etiquetas
             const labelsToAdd = [];
-            if (grupo) {
-              labelsToAdd.push(`grupo-${grupo}`, grupo.startsWith('A') ? 'turno-A' : 'turno-B');
-            }
+            if (grupo) labelsToAdd.push(`grupo-${grupo}`);
+            if (turno) labelsToAdd.push(`turno-${turno}`);
             if (taller) labelsToAdd.push(taller);
+            labelsToAdd.push(passed ? 'auto:passed' : 'auto:failed');
+            if (teacherScore !== null) labelsToAdd.push('teacher:graded');
 
-            const autoPassed = autoRaw === 100;
-            labelsToAdd.push(autoPassed ? 'auto:passed' : 'auto:failed');
-
-            if (teacherRaw !== null) {
-              labelsToAdd.push('teacher:graded');
+            const oppositeStatus = passed ? 'auto:failed' : 'auto:passed';
+            if (labels.includes(oppositeStatus)) {
+              await github.rest.issues.removeLabel({ owner, repo, issue_number: issueNumber, name: oppositeStatus });
             }
-            try {
-              await github.rest.issues.removeLabel({
-                owner, repo, issue_number: issueNumber,
-                name: autoPassed ? 'auto:failed' : 'auto:passed'
-              });
-            } catch (e) {}
+            if (labelsToAdd.length > 0) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number: issueNumber, labels: labelsToAdd });
+            }
 
-            await github.rest.issues.addLabels({ owner, repo, issue_number: issueNumber, labels: labelsToAdd });
+            // Publicar o actualizar comentario del bot
+            const marker = '<!-- TAREA0-EVAL-PANEL -->';
+            const reportBody = `${marker}
+            ## 📊 Panel de Evaluación — Tarea 0
 
-            const botHeader = '<!-- BOT-EVAL-SUMMARY -->';
-            const summaryBody = [
-              botHeader,
-              `### 📊 Panel de Evaluación — Tarea 0 ${grupo ? `(Grupo ${grupo} · ${taller || ''})` : ''}`,
-              '',
-              '#### 1. Desglose de Validación Automática por Taller',
-              ...autoChecks,
-              '',
-              '#### 2. Calificación Ponderada Actual',
-              formulaText,
-              '',
-              `### 🏆 NOTA TOTAL ACTUAL: **${finalScore} / 100 pts**`
-            ].join('\n');
+            - **Grupo:** ${grupo || 'No detectado'} | **Turno:** ${turno || 'No detectado'} | **Taller:** ${taller || 'No detectado'}
+            - **Modalidad activa:** \`${modeText}\`
+            - **Estado:** ${passed ? '✅ APROBADA' : '⚠️ PENDIENTE DE CORRECCIÓN'}
 
-            const existingBotComment = comments.find(c => c.body.includes(botHeader));
+            ### Desglose de Calificación
+            | Componente | Puntuación Bruta | Ponderación |
+            | :--- | :---: | :---: |
+            ${breakdownRows}
+            | **NOTA FINAL** | — | **${finalScore} / 100 pts** |
+
+            ### Comprobaciones Automáticas
+            ${autoChecks.map(c => `- ${c}`).join('\n')}
+
+            ---
+            <sub>Para activar revisión docente, añade la etiqueta \`teacher-review\` o comenta \`TEACHER-SCORE: 85\`.</sub>`;
+
+            const existingBotComment = comments.find(c => c.body && c.body.includes(marker));
             if (existingBotComment) {
               await github.rest.issues.updateComment({
-                owner, repo, comment_id: existingBotComment.id, body: summaryBody
+                owner,
+                repo,
+                comment_id: existingBotComment.id,
+                body: reportBody
               });
             } else {
               await github.rest.issues.createComment({
-                owner, repo, issue_number: issueNumber, body: summaryBody
+                owner,
+                repo,
+                issue_number: issueNumber,
+                body: reportBody
               });
             }
