@@ -7,28 +7,128 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
   <style>
-    .reveal { font-size: 30px; }
-    .reveal h1 { font-size: 2.1em; color: #38bdf8; text-transform: none; }
-    .reveal h2 { font-size: 1.45em; color: #38bdf8; text-transform: none; margin-bottom: 0.6em; }
-    .reveal h3 { font-size: 1.15em; color: #38bdf8; text-transform: none; }
-    .reveal ul, .reveal ol { font-size: 0.9em; line-height: 1.38; }
-    .reveal li { margin-bottom: 0.35em; }
-    .reveal pre { width: 100%; margin: 0.6em auto; }
-    .reveal pre code { font-size: 0.82em; line-height: 1.35; border-radius: 8px; padding: 14px; max-height: 460px; }
-    .reveal table { font-size: 0.74em; width: 100%; }
-    .reveal th, .reveal td { padding: 0.45em 0.65em; }
-    .reveal th { background: #1e293b; color: #38bdf8; }
-    .box { background: #1e293b; border-left: 4px solid #38bdf8; padding: 0.75rem 1.1rem; border-radius: 6px; text-align: left; font-size: 0.85em; }
-    .warn { border-left-color: #f59e0b; }
-    .small { font-size: 0.72em; color: #94a3b8; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0f172a;
+    }
+    .reveal {
+      width: 100vw;
+      height: 100vh;
+      font-size: clamp(18px, 2.1vw, 32px);
+    }
+    .reveal .slides {
+      text-align: left;
+    }
+    .reveal .slides section {
+      width: 92vw !important;
+      max-width: 1400px;
+      height: 90vh;
+      margin: 0 auto;
+      padding: 2vh 2vw !important;
+      box-sizing: border-box;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .reveal .slides section.center-slide {
+      text-align: center;
+      align-items: center;
+    }
+    .reveal h1 {
+      font-size: 2.1em;
+      color: #38bdf8;
+      text-transform: none;
+      margin-bottom: 0.3em;
+    }
+    .reveal h2 {
+      font-size: 1.45em;
+      color: #38bdf8;
+      text-transform: none;
+      border-bottom: 2px solid #1e293b;
+      padding-bottom: 0.25em;
+      margin-bottom: 0.5em;
+    }
+    .reveal h3 {
+      font-size: 1.15em;
+      color: #e2e8f0;
+      text-transform: none;
+    }
+    .reveal ul, .reveal ol {
+      font-size: 0.92em;
+      line-height: 1.42;
+      margin-left: 1.2em;
+    }
+    .reveal li {
+      margin-bottom: 0.4em;
+    }
+    .reveal code {
+      background: #1e293b;
+      color: #7dd3fc;
+      padding: 0.12em 0.38em;
+      border-radius: 5px;
+      font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.9em;
+    }
+    .reveal pre {
+      width: 100%;
+      margin: 0.5em 0;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    }
+    .reveal pre code {
+      display: block;
+      background: #090d16 !important;
+      color: #f8fafc !important;
+      border: 1px solid #334155;
+      border-left: 5px solid #38bdf8;
+      border-radius: 8px;
+      padding: 0.85em 1.1em;
+      font-size: 0.95em;
+      line-height: 1.45;
+      max-height: 52vh;
+      overflow-y: auto;
+    }
+    .reveal table {
+      font-size: 0.78em;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .reveal th, .reveal td {
+      padding: 0.48em 0.7em;
+      border-bottom: 1px solid #334155;
+    }
+    .reveal th {
+      background: #1e293b;
+      color: #38bdf8;
+    }
+    .box {
+      background: #1e293b;
+      border-left: 5px solid #38bdf8;
+      padding: 0.75em 1.1em;
+      border-radius: 8px;
+      font-size: 0.88em;
+      margin-top: 0.6em;
+    }
+    .warn {
+      border-left-color: #f59e0b;
+      background: #1f1b16;
+    }
+    .small {
+      font-size: 0.75em;
+      color: #94a3b8;
+    }
   </style>
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
-      <section>
+      <section class="center-slide">
         <p class="small">Alijó IT Workshops · Workshop 1 (W1)</p>
         <h1>IT Troubleshooting Challenge</h1>
         <h3>Diagnóstico estructurado, intervención controlada y verificación en Linux</h3>
@@ -139,28 +239,30 @@ getent hosts example.com</code></pre>
         </ol>
       </section>
 
-      <section>
+      <section class="center-slide">
         <h2>¡Comenzamos!</h2>
         <p>1. Iniciad la VM Ubuntu y verificad el snapshot <code>BASELINE – BEFORE WORKSHOP</code>.</p>
         <p>2. Abrid vuestro Issue de <strong>Tarea 0</strong> en GitHub.</p>
         <p>3. Asignad los roles del equipo y tomad la línea base.</p>
-        <p class="small">Atajos de presentación: <code>F</code> Pantalla completa · <code>S</code> Vista de ponente · <code>ESC</code> Vista general</p>
+        <p class="small">Atajos: <code>F</code> Pantalla completa · <code>S</code> Vista de ponente · <code>ESC</code> Vista general</p>
       </section>
 
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
   <script>
     Reveal.initialize({
       hash: true,
       slideNumber: true,
       transition: 'slide',
-      width: 1280,
-      height: 720,
-      margin: 0.04,
-      minScale: 0.2,
-      maxScale: 2.0,
-      center: true
+      width: '100%',
+      height: '100%',
+      margin: 0,
+      minScale: 1,
+      maxScale: 1,
+      disableLayout: true,
+      plugins: [ RevealHighlight ]
     });
   </script>
 </body>
