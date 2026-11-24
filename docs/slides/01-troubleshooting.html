@@ -8,13 +8,20 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
   <style>
-    .reveal h1, .reveal h2, .reveal h3 { color: #38bdf8; text-transform: none; }
-    .reveal pre code { font-size: 0.85em; line-height: 1.4; border-radius: 8px; padding: 14px; }
-    .reveal table { font-size: 0.72em; width: 100%; }
+    .reveal { font-size: 30px; }
+    .reveal h1 { font-size: 2.1em; color: #38bdf8; text-transform: none; }
+    .reveal h2 { font-size: 1.45em; color: #38bdf8; text-transform: none; margin-bottom: 0.6em; }
+    .reveal h3 { font-size: 1.15em; color: #38bdf8; text-transform: none; }
+    .reveal ul, .reveal ol { font-size: 0.9em; line-height: 1.38; }
+    .reveal li { margin-bottom: 0.35em; }
+    .reveal pre { width: 100%; margin: 0.6em auto; }
+    .reveal pre code { font-size: 0.82em; line-height: 1.35; border-radius: 8px; padding: 14px; max-height: 460px; }
+    .reveal table { font-size: 0.74em; width: 100%; }
+    .reveal th, .reveal td { padding: 0.45em 0.65em; }
     .reveal th { background: #1e293b; color: #38bdf8; }
-    .box { background: #1e293b; border-left: 4px solid #38bdf8; padding: 0.8rem 1.2rem; border-radius: 6px; text-align: left; font-size: 0.85em; }
+    .box { background: #1e293b; border-left: 4px solid #38bdf8; padding: 0.75rem 1.1rem; border-radius: 6px; text-align: left; font-size: 0.85em; }
     .warn { border-left-color: #f59e0b; }
-    .small { font-size: 0.75em; color: #94a3b8; }
+    .small { font-size: 0.72em; color: #94a3b8; }
   </style>
 </head>
 <body>
@@ -144,7 +151,17 @@ getent hosts example.com</code></pre>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
   <script>
-    Reveal.initialize({ hash: true, slideNumber: true, transition: 'slide' });
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'slide',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0,
+      center: true
+    });
   </script>
 </body>
 </html>
