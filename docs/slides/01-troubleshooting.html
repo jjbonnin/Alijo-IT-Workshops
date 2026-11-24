@@ -36,6 +36,11 @@
     }
     .slide.active { display: flex; }
     .slide.center { text-align: center; align-items: center; }
+    .slide.cover-bg {
+      background: linear-gradient(rgba(9, 13, 22, 0.72), rgba(15, 23, 42, 0.85)),
+                  url("../assets/images/cover-w1.jpg") center center / cover no-repeat;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
+    }
     .two-col {
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
@@ -147,11 +152,10 @@
 
   <div class="deck">
 
-    <section class="slide center active">
+    <section class="slide center cover-bg active">
       <p class="small">IES Sa Colomina · Alijó IT Workshops · Workshop 1 (W1)</p>
       <h1>IT Troubleshooting Challenge</h1>
       <h3>Diagnóstico estructurado, intervención controlada y verificación en Linux</h3>
-      <img class="hero" src="../assets/images/cover-w1.jpg" alt="Portada Workshop 1">
       <p class="small">Turno A (13:20 – 15:05) · Turno B (15:15 – 17:00) · Grupos A1–A6 / B1–B6</p>
       <aside class="notes">
         <strong>Bloque 00:00 – 00:15 (15 min):</strong> Bienvenida, formación de equipos (4–5 alumnos) y comprobación de que VirtualBox y el snapshot <code>BASELINE – BEFORE WORKSHOP</code> están listos.
