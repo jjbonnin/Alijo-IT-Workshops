@@ -1,0 +1,94 @@
+name: "Tarea 2: Entrega Workshop 2 — AI as an IT Technician Assistant"
+description: "Entrega de evidencias, prompts auditados, depuración de diagnostic_script.py y análisis de seguridad (Grupos A1–A6 y B1–B6)."
+title: "[TAREA-2][Grupo-XX] Entrega Workshop 2 - AI IT Assistant"
+labels: ["tarea-2", "W2", "peer:pending"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Instrucciones de Entrega (Tarea 2 — Workshop 2)
+        Completa este formulario con los resultados reales obtenidos en la VM Ubuntu durante la sesión.
+        - **Evaluación Automática (60%):** Verifica coherencia de grupo/turno, fórmula de prompting, depuración de `diagnostic_script.py`, auditoría de los 3 comandos trampa y evidencias reales de terminal.
+        - **Evaluación Peer-to-Peer (40%):** El grupo revisor asignado auditará vuestra entrega mediante comentario con `PEER-SCORE: XX`.
+        - **Revisión Docente (40% si aplica):** Conmuta el cálculo a `30% Auto + 30% Peer + 40% Profesor`.
+
+  - type: dropdown
+    id: turno
+    attributes:
+      label: "Turno"
+      options:
+        - "Turno A"
+        - "Turno B"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: grupo
+    attributes:
+      label: "Identificador de Grupo"
+      options:
+        - "A1"
+        - "A2"
+        - "A3"
+        - "A4"
+        - "A5"
+        - "A6"
+        - "B1"
+        - "B2"
+        - "B3"
+        - "B4"
+        - "B5"
+        - "B6"
+    validations:
+      required: true
+
+  - type: textarea
+    id: integrantes
+    attributes:
+      label: "Integrantes y Roles en esta Sesión"
+      description: "Indica nombre y @usuario tras los dos puntos en al menos 4 roles."
+      value: |
+        - Coordinator: 
+        - Prompt Engineer & Lead Technician: 
+        - Evidence Recorder: 
+        - Security & Code Auditor: 
+        - Support / Backup (opcional si sois 5): 
+    validations:
+      required: true
+
+  - type: textarea
+    id: scenario1
+    attributes:
+      label: "Escenario 01: Análisis de Logs y Servicio Fallido"
+      description: "Pega la evidencia previa inspeccionada (sample-service.log / systemctl), el prompt con la fórmula de 4–5 partes y la salida real verificada en VM."
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: scenario2
+    attributes:
+      label: "Escenario 02: Depuración de diagnostic_script.py"
+      description: "Resume los 4 fallos corregidos en diagnostic_script.py y pega la salida real tras ejecutar python3 diagnostic_script.py sin errores."
+      render: bash
+    validations:
+      required: true
+
+  - type: textarea
+    id: scenario3
+    attributes:
+      label: "Escenario 03: Auditoría de Seguridad (Spot the Trap!)"
+      description: "Explica el riesgo operacional/seguridad y la alternativa segura para: (1) chmod -R 777 /var/www/html, (2) ufw disable, y (3) rm -rf /var/log/*."
+      render: markdown
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: entregables_repo
+    attributes:
+      label: "Higiene de Laboratorio y Documentación"
+      options:
+        - label: "Confirmo que NO se ejecutaron los comandos peligrosos del Escenario 03 ni se filtraron credenciales/claves reales en los prompts."
+          required: true
+        - label: "Worksheets completados en el repositorio/entrega del equipo (Prompt-and-Results-Record.md y Final-Report-Template.md)."
+          required: true
