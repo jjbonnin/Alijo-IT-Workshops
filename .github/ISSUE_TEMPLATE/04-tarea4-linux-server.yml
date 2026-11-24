@@ -1,0 +1,94 @@
+name: "Tarea 4: Entrega Workshop 4 — Linux Server Administration"
+description: "Entrega de administración de usuarios/permisos, hardening con systemd/ufw, automatización Bash/cron y resolución del incidente INC-401 (Grupos A1–A6 y B1–B6)."
+title: "[TAREA-4][Grupo-XX] Entrega Workshop 4 - Linux Server Administration"
+labels: ["tarea-4", "W4", "peer:pending"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Instrucciones de Entrega (Tarea 4 — Workshop 4)
+        Completa este formulario con las evidencias obtenidas en vuestro servidor Ubuntu (`alijo-srv01`).
+        - **Evaluación Automática (60%):** Verifica coherencia de grupo/turno/roles, permisos de mínimo privilegio (`750`/`644`/`640`), endurecimiento con `systemd`/`ufw`, script `server_report.sh` + `cron` y resolución del reto `INC-401`.
+        - **Evaluación Peer-to-Peer (40%):** El grupo revisor asignado auditará vuestra entrega mediante comentario con `PEER-SCORE: XX`.
+        - **Revisión Docente (40% si aplica):** Conmuta el cálculo a `30% Auto + 30% Peer + 40% Profesor`.
+
+  - type: dropdown
+    id: turno
+    attributes:
+      label: "Turno"
+      options:
+        - "Turno A (08:25 - 10:10)"
+        - "Turno B (10:30 - 12:15)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: grupo
+    attributes:
+      label: "Identificador de Grupo"
+      options:
+        - "A1"
+        - "A2"
+        - "A3"
+        - "A4"
+        - "A5"
+        - "A6"
+        - "B1"
+        - "B2"
+        - "B3"
+        - "B4"
+        - "B5"
+        - "B6"
+    validations:
+      required: true
+
+  - type: textarea
+    id: integrantes
+    attributes:
+      label: "Integrantes y Roles en esta Sesión"
+      description: "Indica nombre y @usuario tras los dos puntos en al menos 4 roles."
+      value: |
+        - Server Lead: 
+        - Identity & Permissions Admin: 
+        - Service & Firewall Admin: 
+        - Automation & Cron Engineer: 
+        - Auditor / Evidence Recorder (opcional si sois 5): 
+    validations:
+      required: true
+
+  - type: textarea
+    id: bloque1_usuarios_permisos
+    attributes:
+      label: "Bloque 1: Usuarios, Grupos y Permisos (/srv/alijo-portal)"
+      description: "Pega la evidencia de grupos (`webadmins`, `auditors`), pertenencia con `usermod -aG` y permisos verificados en `/srv/alijo-portal` (`750`, `644` en `index.html`, `640` en `.env`)."
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: bloque2_servicios_ufw_cron
+    attributes:
+      label: "Bloque 2: Servicios systemd, Firewall UFW y Automatización (server_report.sh + cron)"
+      description: "Incluye la salida de `apache2ctl configtest`, `systemctl status apache2`, `sudo ufw status numbered` (`22/tcp` y `80/tcp`), ejecución de `server_report.sh` (`$? = 0`) y la línea de `crontab` programada a las 07:30."
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: bloque3_inc401
+    attributes:
+      label: "Bloque 3: Reto Final de Gestión de Incidentes (INC-401 — 5 Capas)"
+      description: "Documenta el diagnóstico y remediación de los 5 fallos (`apache2` caído, `403` en `status.html`, `.env` en `666`, `ufw` bloqueando `80/tcp` y permitiendo `23/tcp`, y permisos de `server_report.sh`) junto con `curl -i http://<IP>/status.html` devolviendo `200 OK`."
+      render: markdown
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: higiene_worksheets
+    attributes:
+      label: "Seguridad Operativa y Worksheets"
+      options:
+        - label: "Confirmo que NO se inició sesión directa como root, NO se usó `chmod 777` ni `ufw disable` como atajo y se restauró el snapshot base al finalizar."
+          required: true
+        - label: "Worksheets completados en el repositorio/entrega del equipo (Server-Baseline, Users-Groups-Permissions, Service-Management, Bash-Script e Incident-Report.md)."
+          required: true
