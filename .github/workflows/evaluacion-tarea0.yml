@@ -33,6 +33,9 @@ jobs:
             let autoRaw = 0;
             const autoChecks = [];
 
+            const turnoMatch = body.match(/### Turno\s+Turno\s+([AB])/i);
+            const turno = turnoMatch ? turnoMatch[1].toUpperCase() : null;
+
             // 1. Coherencia completa: Título [Grupo-XX] === Desplegable Grupo === Turno y Taller (20 pts)
             const titleGrupoMatch = (issue.title || '').match(/\[Grupo-([AB][1-6])\]/i);
             const titleGrupo = titleGrupoMatch ? titleGrupoMatch[1].toUpperCase() : null;
