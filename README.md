@@ -37,3 +37,6 @@ Each workshop is designed as a **3-hour (180-minute) hands-on lab** for teams of
 ## License
 
 This project is licensed under the GPL-3.0 license — see the [LICENSE](./LICENSE) file for details.
+
+## 📋 Entregas y Evaluación Peer-to-Peer
+Consulta la [Guía de Entregas y Evaluación Cruzada (Peer-to-Peer)](./00-Shared-Resources/Guia-Entregas-y-Peer-Review.md) para ver la tabla de rotación entre grupos (`A1–A6` y `B1–B6`) por tarea y los criterios de auditoría (`PEER-SCORE`).
