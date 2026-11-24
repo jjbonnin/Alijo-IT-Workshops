@@ -36,6 +36,11 @@
     }
     .slide.active { display: flex; }
     .slide.center { text-align: center; align-items: center; }
+    .slide.steps-bg {
+      background: linear-gradient(rgba(9, 13, 22, 0.80), rgba(15, 23, 42, 0.88)),
+                  url("../assets/images/diagram-7-steps.jpg") center center / cover no-repeat;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+    }
     .slide.cover-bg {
       background: linear-gradient(rgba(9, 13, 22, 0.72), rgba(15, 23, 42, 0.85)),
                   url("../assets/images/cover-w1.jpg") center center / cover no-repeat;
@@ -196,10 +201,9 @@
       </aside>
     </section>
 
-    <section class="slide">
+    <section class="slide steps-bg">
       <h2>Metodología de Resolución (7 Pasos)</h2>
-      <div class="two-col">
-        <ol>
+      <ol>
           <li><strong>Identify:</strong> Comprender qué falla y a quién afecta.</li>
           <li><strong>Gather Evidence:</strong> Recopilar hechos y logs <em>antes</em> de tocar nada.</li>
           <li><strong>Form a Hypothesis:</strong> Formular la causa más probable.</li>
@@ -208,8 +212,6 @@
           <li><strong>Verify:</strong> Repetir la prueba original y comprobar el sistema.</li>
           <li><strong>Document:</strong> Registrar causa raíz, solución y evidencias.</li>
         </ol>
-        <img class="diagram" src="../assets/images/diagram-7-steps.jpg" alt="Diagrama de los 7 pasos de troubleshooting">
-      </div>
       <aside class="notes">
         <strong>Bloque 00:15 – 00:35 (20 min):</strong> Explicar la diferencia entre síntoma (ej. "no abre la web") y causa raíz ("DNS mal configurado o servicio detenido").
       </aside>
