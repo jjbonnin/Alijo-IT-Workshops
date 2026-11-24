@@ -56,6 +56,12 @@ jobs:
               .split('\n')
               .filter(l => /^-\s*[^:]+:\s*\S{2,}/i.test(l.trim()));
 
+            // Extraer miembros del propio grupo para impedir autoevaluación
+            const ownTeamMembers = new Set([
+              (issue.user?.login || '').toLowerCase(),
+              ...[...membersBlock.matchAll(/@([a-zA-Z0-9-]+)/g)].map(m => m[1].toLowerCase())
+            ]);
+
             if (grupo && titleGrupo === grupo && turnoCoherente && roleLines.length >= 4) {
               autoRaw += 20;
               autoChecks.push(`✅ **Identificación coherente (\`Grupo-${grupo}\`, Turno ${turno}) y ${roleLines.length} roles completos:** 20/20`);
@@ -107,11 +113,32 @@ jobs:
               autoChecks.push(`❌ **Faltan confirmaciones finales (${hygieneChecked}/2):** Marca las casillas de seguridad y worksheets (0/10).`);
             }
 
-            // Detectar si pegaron ejecución real de comandos prohibidos en Escenarios 1 o 2
             const execText = `${s1Block}\n${s2Block}`;
             if (/(?:^|\n)\s*(?:\$|#|ubtadmin@|root@).*?(?:chmod\s+-R\s+777\s+\/var\/www|ufw\s+disable|rm\s+-rf\s+\/var\/log\/\*)/m.test(execText)) {
               autoRaw = Math.max(0, autoRaw - 15);
               autoChecks.push(`🚨 **Penalización de seguridad (-15 pts):** Se detectó ejecución en terminal de un comando prohibido del Escenario 03.`);
+            }
+
+            // Obtener integrantes registrados del grupo revisor asignado (desde Tarea 0 o Tarea 2)
+            let allowedReviewers = null;
+            if (reviewerGroup) {
+              const { data: reviewerIssues } = await github.rest.issues.listForRepo({
+                owner,
+                repo,
+                labels: `grupo-${reviewerGroup}`,
+                state: 'all',
+                per_page: 10
+              });
+              if (reviewerIssues.length > 0) {
+                allowedReviewers = new Set();
+                for (const ri of reviewerIssues) {
+                  if (ri.user?.login) allowedReviewers.add(ri.user.login.toLowerCase());
+                  const rBlock = (ri.body || '').split('### Integrantes')[1]?.split('###')[0] || '';
+                  for (const m of rBlock.matchAll(/@([a-zA-Z0-9-]+)/g)) {
+                    allowedReviewers.add(m[1].toLowerCase());
+                  }
+                }
+              }
             }
 
             // Leer comentarios para Peer-to-Peer y Profesor
@@ -124,6 +151,7 @@ jobs:
 
             let peerScore = null;
             let peerAuthor = null;
+            let rejectedPeerMsg = null;
             let teacherScore = null;
             let gradedBy = null;
 
@@ -142,8 +170,17 @@ jobs:
 
               const pMatch = commentBody.match(/PEER-SCORE:\s*(\d{1,3})/i);
               if (pMatch) {
+                if (ownTeamMembers.has(login) && !TEACHERS.includes(login)) {
+                  rejectedPeerMsg = `⚠️ Nota Peer de \`@${c.user.login}\` ignorada: pertenece al mismo grupo evaluado (\`${grupo}\`).`;
+                  continue;
+                }
+                if (allowedReviewers && !allowedReviewers.has(login) && !TEACHERS.includes(login)) {
+                  rejectedPeerMsg = `⚠️ Nota Peer de \`@${c.user.login}\` ignorada: no figura como integrante del grupo revisor asignado (\`${reviewerGroup}\`).`;
+                  continue;
+                }
                 peerScore = Math.min(100, Math.max(0, parseInt(pMatch[1], 10)));
                 peerAuthor = c.user.login;
+                rejectedPeerMsg = null;
               }
             }
 
@@ -204,6 +241,7 @@ jobs:
               `- **Grupo:** ${grupo || 'No detectado'} | **Turno:** ${turno || 'No detectado'} | **Grupo Revisor Asignado:** \`${reviewerGroup || 'No asignado'}\``,
               `- **Modalidad activa:** \`${modeText}\``,
               `- **Estado:** ${passed ? '✅ APROBADO (≥ 70 pts)' : '⏳ PENDIENTE DE REVISIÓN / CORRECCIÓN'}`,
+              ...(rejectedPeerMsg ? ['', `> ${rejectedPeerMsg}`] : []),
               '',
               '### Desglose de Calificación',
               '| Componente | Puntuación Bruta | Ponderación |',
