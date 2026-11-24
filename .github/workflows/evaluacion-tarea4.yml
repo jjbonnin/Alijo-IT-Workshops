@@ -21,8 +21,8 @@ jobs:
           script: |
             const TEACHERS = ['jjbonnin'];
             const PEER_MAP = {
-              A1: 'A2', A2: 'A3', A3: 'A4', A4: 'A5', A5: 'A6', A6: 'A1',
-              B1: 'B2', B2: 'B3', B3: 'B4', B4: 'B5', B5: 'B6', B6: 'B1'
+              A1: 'A5', A2: 'A6', A3: 'A1', A4: 'A2', A5: 'A3', A6: 'A4',
+              B1: 'B5', B2: 'B6', B3: 'B1', B4: 'B2', B5: 'B3', B6: 'B4'
             };
 
             const issue = context.payload.issue;
