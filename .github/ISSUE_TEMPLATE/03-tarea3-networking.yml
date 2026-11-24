@@ -1,0 +1,94 @@
+name: "Tarea 3: Entrega Workshop 3 — Build and Configure a Network"
+description: "Entrega del diseño IPv4, simulación en Packet Tracer, montaje físico con servidor Ubuntu y resolución de fallos de red (Grupos A1–A6 y B1–B6)."
+title: "[TAREA-3][Grupo-XX] Entrega Workshop 3 - Build and Configure a Network"
+labels: ["tarea-3", "W3", "peer:pending"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Instrucciones de Entrega (Tarea 3 — Workshop 3)
+        Completa este formulario con los resultados del diseño IPv4, la simulación en Cisco Packet Tracer, el montaje físico en mesa y los dos tickets de troubleshooting.
+        - **Evaluación Automática (60%):** Verifica coherencia de grupo/turno/roles, plan IPv4 + Packet Tracer, montaje físico Ubuntu (`HTTP` + `DNS` + `ufw`) y resolución Bottom-Up de los 2 tickets de fallo.
+        - **Evaluación Peer-to-Peer (40%):** El grupo revisor asignado auditará vuestra entrega mediante comentario con `PEER-SCORE: XX`.
+        - **Revisión Docente (40% si aplica):** Conmuta el cálculo a `30% Auto + 30% Peer + 40% Profesor`.
+
+  - type: dropdown
+    id: turno
+    attributes:
+      label: "Turno"
+      options:
+        - "Turno A (08:25 - 10:10)"
+        - "Turno B (10:30 - 12:15)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: grupo
+    attributes:
+      label: "Identificador de Grupo"
+      options:
+        - "A1"
+        - "A2"
+        - "A3"
+        - "A4"
+        - "A5"
+        - "A6"
+        - "B1"
+        - "B2"
+        - "B3"
+        - "B4"
+        - "B5"
+        - "B6"
+    validations:
+      required: true
+
+  - type: textarea
+    id: integrantes
+    attributes:
+      label: "Integrantes y Roles en esta Sesión"
+      description: "Indica nombre y @usuario tras los dos puntos en al menos 4 roles."
+      value: |
+        - Network Architect: 
+        - Simulation Lead: 
+        - Physical Cabling & Switch Tech: 
+        - Server & Firewall Admin: 
+        - Test & Evidence Recorder (opcional si sois 5): 
+    validations:
+      required: true
+
+  - type: textarea
+    id: fase1_packet_tracer
+    attributes:
+      label: "Fase 1: Plan IPv4 y Simulación en Cisco Packet Tracer"
+      description: "Resume vuestra tabla de direccionamiento (subredes 192.168.10.0/24 y 192.168.20.0/24, gateways y DNS) y la evidencia de validación en Packet Tracer (ping entre subredes y acceso web a intranet.alijo.local)."
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: fase2_red_fisica
+    attributes:
+      label: "Fase 2: Montaje Físico y Servidor Local Ubuntu (HTTP + DNS + UFW)"
+      description: "Pega las salidas verificadas en el servidor y cliente físico: `ip -br -4 addr`, `dig @192.168.10.10 intranet.alijo.local +short`, `curl -I http://intranet.alijo.local:8080` y `sudo ufw status numbered`."
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: fase3_troubleshooting
+    attributes:
+      label: "Fase 3: Resolución de Tickets de Fallo (Ticket A Packet Tracer + Ticket B Físico)"
+      description: "Documenta para ambos tickets: síntoma observado, diagnóstico capa por capa (L1–L7), causa raíz, cambio exacto aplicado y evidencia de verificación."
+      render: markdown
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: higiene_worksheets
+    attributes:
+      label: "Seguridad de Red, Limpieza y Worksheets"
+      options:
+        - label: "Confirmo que el equipamiento físico permaneció aislado de la red del centro, NO se usó `ufw disable` como atajo y se restauró la configuración base al finalizar."
+          required: true
+        - label: "Worksheets completados en el repositorio/entrega del equipo (Topology/IP-Addressing, Environment-Comparison e Incident-Report-Template.md)."
+          required: true
