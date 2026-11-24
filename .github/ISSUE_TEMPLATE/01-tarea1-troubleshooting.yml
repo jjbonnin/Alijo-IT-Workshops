@@ -1,0 +1,85 @@
+name: "Tarea 1: Entrega Workshop 1 — IT Troubleshooting Challenge"
+description: "Entrega del informe técnico de incidentes asignados e incidente sorpresa aplicando metodología estructurada (Grupos A1–A6 y B1–B6)."
+title: "[TAREA-1][Grupo-XX] Entrega Workshop 1 - IT Troubleshooting Challenge"
+labels: ["tarea-1", "W1", "peer:pending"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Instrucciones de Entrega (Tarea 1 — Workshop 1)
+        Completa este formulario con el diagnóstico, la resolución y las pruebas de verificación obtenidas en vuestra VM Ubuntu Desktop.
+        - **Evaluación Automática (60%):** Verifica coherencia de grupo/turno/roles, metodología estructurada (Síntomas → Diagnóstico/Causa Raíz → Solución → Verificación con evidencia CLI) en los incidentes asignados y en el incidente sorpresa.
+        - **Evaluación Peer-to-Peer (40%):** El grupo revisor asignado auditará vuestra entrega mediante comentario con `PEER-SCORE: XX`.
+        - **Revisión Docente (40% si aplica):** Conmuta el cálculo a `30% Auto + 30% Peer + 40% Profesor`.
+
+  - type: dropdown
+    id: turno
+    attributes:
+      label: "Turno"
+      options:
+        - "Turno A (08:25 - 10:10)"
+        - "Turno B (10:30 - 12:15)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: grupo
+    attributes:
+      label: "Identificador de Grupo"
+      options:
+        - "A1"
+        - "A2"
+        - "A3"
+        - "A4"
+        - "A5"
+        - "A6"
+        - "B1"
+        - "B2"
+        - "B3"
+        - "B4"
+        - "B5"
+        - "B6"
+    validations:
+      required: true
+
+  - type: textarea
+    id: integrantes
+    attributes:
+      label: "Integrantes y Roles en esta Sesión"
+      description: "Indica nombre y @usuario tras los dos puntos en al menos 4 roles."
+      value: |
+        - Team Coordinator: 
+        - Lead Technician: 
+        - Evidence Recorder: 
+        - Verifier / Tester: 
+        - Reporter (opcional si sois 5): 
+    validations:
+      required: true
+
+  - type: textarea
+    id: incidentes_asignados
+    attributes:
+      label: "Incidentes Asignados (Diagnóstico, Solución y Evidencia)"
+      description: "Documenta cada incidente asignado indicando: (1) Síntomas e impacto, (2) Comandos de investigación y salida, (3) Causa raíz diagnosticada, (4) Fix aplicado y (5) Prueba de verificación real tras el cambio."
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: incidente_sorpresa
+    attributes:
+      label: "Incidente Sorpresa (Investigación, Causa Raíz y Verificación)"
+      description: "Documenta el incidente sorpresa siguiendo los mismos pasos metodológicos y pega la salida de terminal que demuestra que el servicio/sistema vuelve a funcionar."
+      render: markdown
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: entregables_repo
+    attributes:
+      label: "Higiene de Laboratorio y Documentación"
+      options:
+        - label: "Confirmo que todo el diagnóstico y cambios se realizaron exclusivamente dentro de la VM Ubuntu aislada (sin afectar al host ni a la red del centro)."
+          required: true
+        - label: "Worksheets completados en el repositorio/entrega del equipo (Incident-Log.md y Final-Report-Template.md)."
+          required: true
