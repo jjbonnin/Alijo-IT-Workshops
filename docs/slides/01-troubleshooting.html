@@ -64,6 +64,11 @@
     }
     .slide.active { display: flex; }
     .slide.center { text-align: center; align-items: center; }
+    .slide.steps-bg {
+      background: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.65)),
+                  url("../assets/images/diagram-7-steps.jpg") center center / cover no-repeat;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+    }
     .slide.cover-bg {
       background: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.65)),
                   url("../assets/images/cover-w1.jpg") center center / cover no-repeat;
@@ -276,11 +281,9 @@
     </section>
 
     <!-- Slide 5 -->
-    <section class="slide">
+    <section class="slide steps-bg">
       <h2>5. The 7-Step Troubleshooting Methodology</h2>
-      <div class="split-right">
-        <div>
-          <p>Follow these steps <strong>strictly in order</strong> for every incident card:</p>
+      <p>Follow these steps <strong>strictly in order</strong> for every incident card:</p>
           <pre><code>[1. Identify & Reproduce] ──▶ [2. Gather Baseline Info] ──▶ [3. Form Hypotheses]
                                                                      │
 [7. Document & Close] ◀── [6. Verify & Regression Test] ◀── [4. Test & Isolate]
@@ -290,9 +293,6 @@
             <li><strong>Golden Principle:</strong> Never jump from Step 1 (Symptom) directly to Step 5 (Fix).</li>
             <li>If Step 6 fails, <strong>revert your change</strong> and return to Step 3 with new evidence.</li>
           </ul>
-        </div>
-        <img src="../assets/images/diagram-7-steps.jpg" alt="7-Step Troubleshooting Methodology">
-      </div>
       <aside class="notes">
         <strong>Notas del orador (20–30 min):</strong><br>
         • Pon un ejemplo rápido: "Si una web no carga, reiniciar el servidor a ciegas no diagnostica si el fallo era DNS, firewall o el proceso caído".
