@@ -1,0 +1,266 @@
+name: "Evaluación Híbrida — Tarea 3 (Workshop 3: Build and Configure a Network)"
+
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled]
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  evaluar-tarea-3:
+    if: contains(github.event.issue.labels.*.name, 'tarea-3')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Evaluar Tarea 3 (60% Auto + 40% Peer | 30% Auto + 30% Peer + 40% Profesor)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const TEACHERS = ['jjbonnin'];
+            const PEER_MAP = {
+              A1: 'A2', A2: 'A3', A3: 'A4', A4: 'A5', A5: 'A6', A6: 'A1',
+              B1: 'B2', B2: 'B3', B3: 'B4', B4: 'B5', B5: 'B6', B6: 'B1'
+            };
+
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+            const title = issue.title || '';
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issueNumber = issue.number;
+
+            const turnoMatch = body.match(/### Turno\s+Turno\s+([AB])/i);
+            const turno = turnoMatch ? turnoMatch[1].toUpperCase() : null;
+
+            const grupoMatch = body.match(/### Identificador de Grupo[^\n]*\n+([AB][1-6])/i);
+            const grupo = grupoMatch ? grupoMatch[1].toUpperCase() : null;
+
+            const titleGrupoMatch = title.match(/\[Grupo-([AB][1-6])\]/i);
+            const titleGrupo = titleGrupoMatch ? titleGrupoMatch[1].toUpperCase() : null;
+
+            const reviewerGroup = grupo ? PEER_MAP[grupo] : null;
+
+            let autoRaw = 0;
+            const autoChecks = [];
+
+            // 1. Coherencia Título + Grupo + Turno + Roles (20 pts)
+            const turnoCoherente = !turno || (grupo && grupo.startsWith(turno));
+            const membersBlock = body.split('### Integrantes y Roles')[1]?.split('###')[0] || '';
+            const roleLines = membersBlock
+              .trim()
+              .split('\n')
+              .filter(l => /^-\s*[^:]+:\s*\S{2,}/i.test(l.trim()));
+
+            const ownTeamMembers = new Set([
+              (issue.user?.login || '').toLowerCase(),
+              ...[...membersBlock.matchAll(/@([a-zA-Z0-9-]+)/g)].map(m => m[1].toLowerCase())
+            ]);
+
+            if (grupo && titleGrupo === grupo && turnoCoherente && roleLines.length >= 4) {
+              autoRaw += 20;
+              autoChecks.push(`✅ **Identificación coherente (\`Grupo-${grupo}\`, Turno ${turno}) y ${roleLines.length} roles completos:** 20/20`);
+            } else {
+              autoChecks.push(`❌ **Identificación o roles incompletos:** Verifica \`[Grupo-${grupo || 'A1'}]\` en el título, coherencia con Turno ${turno || '?'} y al menos 4 roles con nombre (${roleLines.length}/4) (0/20).`);
+            }
+
+            // 2. Fase 1: Plan IPv4 + Simulación Cisco Packet Tracer (20 pts)
+            const f1Block = body.split('### Fase 1:')[1]?.split('###')[0] || '';
+            const f1HasSubnets = /192\.168\.(10|20)\./.test(f1Block);
+            const f1HasVerify = /(packet tracer|pkt|ping|intranet\.alijo\.local|gateway|dns|dhcp|helper-address)/i.test(f1Block);
+            if (f1Block.trim().length >= 120 && f1HasSubnets && f1HasVerify) {
+              autoRaw += 20;
+              autoChecks.push(`✅ **Fase 1 (Plan IPv4 y simulación Packet Tracer verificada):** 20/20`);
+            } else {
+              autoChecks.push(`❌ **Fase 1 incompleta:** Incluye el direccionamiento \`192.168.10.0/24\` / \`192.168.20.0/24\` y pruebas en Packet Tracer (0/20).`);
+            }
+
+            // 3. Fase 2: Montaje Físico y Servidor Local Ubuntu (25 pts)
+            const f2Block = body.split('### Fase 2:')[1]?.split('###')[0] || '';
+            const f2HasNet = /(192\.168\.|ip\s+-br|dig|nslookup|intranet\.alijo\.local)/i.test(f2Block);
+            const f2HasHttpUfw = /(8080|200\s+ok|curl|ufw)/i.test(f2Block);
+            if (f2Block.trim().length >= 120 && f2HasNet && f2HasHttpUfw) {
+              autoRaw += 25;
+              autoChecks.push(`✅ **Fase 2 (Montaje físico, DNS/HTTP 8080 y firewall \`ufw\` activos):** 25/25`);
+            } else {
+              autoChecks.push(`❌ **Fase 2 incompleta:** Pega evidencias reales de IP estática, resolución DNS (\`dig\`), respuesta HTTP (\`200 OK\`) y \`ufw status\` (0/25).`);
+            }
+
+            // 4. Fase 3: Resolución de Tickets de Fallo (25 pts)
+            const f3Block = body.split('### Fase 3:')[1]?.split('###')[0] || '';
+            const f3HasTickets = /(ticket\s*a|packet tracer|dhcp|helper-address|gateway)/i.test(f3Block) && /(ticket\s*b|físico|fisico|ubuntu|ufw|8080|dns|máscara|mascara|subnet)/i.test(f3Block);
+            const f3HasDiag = /(causa|cause|diagnóstico|diagnosis|verificaci|verification|resuelto|resolved|200\s+ok)/i.test(f3Block);
+            if (f3Block.trim().length >= 150 && f3HasTickets && f3HasDiag) {
+              autoRaw += 25;
+              autoChecks.push(`✅ **Fase 3 (Tickets A y B diagnosticados y verificados):** 25/25`);
+            } else {
+              autoChecks.push(`❌ **Fase 3 incompleta:** Documenta causa raíz, fix aplicado y verificación tanto del Ticket A (Packet Tracer) como del Ticket B (Ubuntu físico) (0/25).`);
+            }
+
+            // 5. Higiene y Worksheets (10 pts) + Penalización si ejecutó ufw disable (-15 pts)
+            const hygieneChecked = (body.match(/- \[x\] (?:Confirmo que el equipamiento|Worksheets completados)/gi) || []).length;
+            if (hygieneChecked >= 2) {
+              autoRaw += 10;
+              autoChecks.push(`✅ **Aislamiento de red, limpieza y Worksheets confirmados (2/2):** 10/10`);
+            } else {
+              autoChecks.push(`❌ **Faltan confirmaciones finales (${hygieneChecked}/2):** Marca las casillas de seguridad de red y worksheets (0/10).`);
+            }
+
+            const execText = `${f2Block}\n${f3Block}`;
+            if (/(?:^|\n)\s*(?:\$|#|ubtadmin@|root@).*?ufw\s+disable/m.test(execText)) {
+              autoRaw = Math.max(0, autoRaw - 15);
+              autoChecks.push(`🚨 **Penalización de seguridad (-15 pts):** Se detectó ejecución de \`ufw disable\` en lugar de configurar una regla específica.`);
+            }
+
+            // Obtener integrantes registrados del grupo revisor asignado
+            let allowedReviewers = null;
+            if (reviewerGroup) {
+              const { data: reviewerIssues } = await github.rest.issues.listForRepo({
+                owner,
+                repo,
+                labels: `grupo-${reviewerGroup}`,
+                state: 'all',
+                per_page: 10
+              });
+              if (reviewerIssues.length > 0) {
+                allowedReviewers = new Set();
+                for (const ri of reviewerIssues) {
+                  if (ri.user?.login) allowedReviewers.add(ri.user.login.toLowerCase());
+                  const rBlock = (ri.body || '').split('### Integrantes')[1]?.split('###')[0] || '';
+                  for (const m of rBlock.matchAll(/@([a-zA-Z0-9-]+)/g)) {
+                    allowedReviewers.add(m[1].toLowerCase());
+                  }
+                }
+              }
+            }
+
+            const labels = issue.labels.map(l => l.name);
+            const { data: comments } = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number: issueNumber
+            });
+
+            let peerScore = null;
+            let peerAuthor = null;
+            let rejectedPeerMsg = null;
+            let teacherScore = null;
+            let gradedBy = null;
+
+            for (const c of comments) {
+              if (c.user?.type === 'Bot') continue;
+              const login = (c.user?.login || '').toLowerCase();
+              const commentBody = c.body || '';
+
+              if (TEACHERS.includes(login)) {
+                const tMatch = commentBody.match(/TEACHER-SCORE:\s*(\d{1,3})/i);
+                if (tMatch) {
+                  teacherScore = Math.min(100, Math.max(0, parseInt(tMatch[1], 10)));
+                  gradedBy = c.user.login;
+                }
+              }
+
+              const pMatch = commentBody.match(/PEER-SCORE:\s*(\d{1,3})/i);
+              if (pMatch) {
+                if (ownTeamMembers.has(login) && !TEACHERS.includes(login)) {
+                  rejectedPeerMsg = `⚠️ Nota Peer de \`@${c.user.login}\` ignorada: pertenece al mismo grupo evaluado (\`${grupo}\`).`;
+                  continue;
+                }
+                if (allowedReviewers && !allowedReviewers.has(login) && !TEACHERS.includes(login)) {
+                  rejectedPeerMsg = `⚠️ Nota Peer de \`@${c.user.login}\` ignorada: no figura como integrante del grupo revisor asignado (\`${reviewerGroup}\`).`;
+                  continue;
+                }
+                peerScore = Math.min(100, Math.max(0, parseInt(pMatch[1], 10)));
+                peerAuthor = c.user.login;
+                rejectedPeerMsg = null;
+              }
+            }
+
+            const hasTeacherReview = labels.includes('teacher-review') || teacherScore !== null;
+            let finalScore = 0;
+            let modeText = '';
+            let breakdownRows = '';
+
+            if (hasTeacherReview) {
+              const autoW = +(autoRaw * 0.3).toFixed(1);
+              const peerW = peerScore !== null ? +(peerScore * 0.3).toFixed(1) : 0;
+              const teacherW = teacherScore !== null ? +(teacherScore * 0.4).toFixed(1) : 0;
+              finalScore = +(autoW + peerW + teacherW).toFixed(1);
+              modeText = '30% Automática + 30% Peer-to-Peer + 40% Profesor';
+              breakdownRows =
+                `| Evaluación Automática (30%) | ${autoRaw} / 100 | **${autoW} / 30 pts** |\n` +
+                `| Evaluación Peer-to-Peer (30%) | ${peerScore !== null ? `${peerScore} / 100 (por @${peerAuthor})` : `Pendiente (Grupo ${reviewerGroup || '?'})`} | **${peerW} / 30 pts** |\n` +
+                `| Evaluación Profesor (40%) | ${teacherScore !== null ? `${teacherScore} / 100 (por @${gradedBy})` : 'Pendiente (`TEACHER-SCORE: XX`)'} | **${teacherW} / 40 pts** |`;
+            } else {
+              const autoW = +(autoRaw * 0.6).toFixed(1);
+              const peerW = peerScore !== null ? +(peerScore * 0.4).toFixed(1) : 0;
+              finalScore = +(autoW + peerW).toFixed(1);
+              modeText = '60% Automática + 40% Peer-to-Peer';
+              breakdownRows =
+                `| Evaluación Automática (60%) | ${autoRaw} / 100 | **${autoW} / 60 pts** |\n` +
+                `| Evaluación Peer-to-Peer (40%) | ${peerScore !== null ? `${peerScore} / 100 (por @${peerAuthor})` : `Pendiente (Grupo ${reviewerGroup || '?'})`} | **${peerW} / 40 pts** |`;
+            }
+
+            const passed = finalScore >= 70 && peerScore !== null && (!hasTeacherReview || teacherScore !== null);
+
+            const labelsToAdd = [];
+            if (grupo) labelsToAdd.push(`grupo-${grupo}`);
+            if (turno) labelsToAdd.push(`turno-${turno}`);
+            labelsToAdd.push(peerScore !== null ? 'peer:done' : 'peer:pending');
+            labelsToAdd.push(autoRaw >= 70 ? 'auto:passed' : 'auto:failed');
+            if (teacherScore !== null) labelsToAdd.push('teacher:graded');
+
+            const toRemove = [];
+            if (peerScore !== null && labels.includes('peer:pending')) toRemove.push('peer:pending');
+            if (peerScore === null && labels.includes('peer:done')) toRemove.push('peer:done');
+            if (autoRaw >= 70 && labels.includes('auto:failed')) toRemove.push('auto:failed');
+            if (autoRaw < 70 && labels.includes('auto:passed')) toRemove.push('auto:passed');
+
+            for (const lbl of toRemove) {
+              await github.rest.issues.removeLabel({ owner, repo, issue_number: issueNumber, name: lbl });
+            }
+            if (labelsToAdd.length > 0) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number: issueNumber, labels: labelsToAdd });
+            }
+
+            const marker = '<!-- TAREA3-EVAL-PANEL -->';
+            const reportBody = [
+              marker,
+              '## 📊 Panel de Evaluación — Tarea 3 (Workshop 3: Build and Configure a Network)',
+              '',
+              `- **Grupo:** ${grupo || 'No detectado'} | **Turno:** ${turno || 'No detectado'} | **Grupo Revisor Asignado:** \`${reviewerGroup || 'No asignado'}\``,
+              `- **Modalidad activa:** \`${modeText}\``,
+              `- **Estado:** ${passed ? '✅ APROBADO (≥ 70 pts)' : '⏳ PENDIENTE DE REVISIÓN / CORRECCIÓN'}`,
+              ...(rejectedPeerMsg ? ['', `> ${rejectedPeerMsg}`] : []),
+              '',
+              '### Desglose de Calificación',
+              '| Componente | Puntuación Bruta | Ponderación |',
+              '| :--- | :---: | :---: |',
+              breakdownRows,
+              `| **NOTA FINAL** | — | **${finalScore} / 100 pts** |`,
+              '',
+              '### Comprobaciones Automáticas (Tarea 3)',
+              ...autoChecks.map(c => `- ${c}`),
+              '',
+              '---',
+              `<sub>**Grupo ${reviewerGroup || 'Revisor'}:** Para calificar este taller, comenta \`PEER-SCORE: 85\` junto con vuestra auditoría. | **Profesores:** \`TEACHER-SCORE: 90\`.</sub>`
+            ].join('\n');
+
+            const existingBotComment = comments.find(c => c.body && c.body.includes(marker));
+            if (existingBotComment) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existingBotComment.id,
+                body: reportBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                body: reportBody
+              });
+            }
