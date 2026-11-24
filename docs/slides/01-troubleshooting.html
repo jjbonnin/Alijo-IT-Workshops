@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taller 1: IT Troubleshooting Challenge</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <style>
+    .reveal h1, .reveal h2, .reveal h3 { color: #38bdf8; text-transform: none; }
+    .reveal pre code { font-size: 0.85em; line-height: 1.4; border-radius: 8px; padding: 14px; }
+    .reveal table { font-size: 0.72em; width: 100%; }
+    .reveal th { background: #1e293b; color: #38bdf8; }
+    .box { background: #1e293b; border-left: 4px solid #38bdf8; padding: 0.8rem 1.2rem; border-radius: 6px; text-align: left; font-size: 0.85em; }
+    .warn { border-left-color: #f59e0b; }
+    .small { font-size: 0.75em; color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <p class="small">Alijó IT Workshops · Workshop 1 (W1)</p>
+        <h1>IT Troubleshooting Challenge</h1>
+        <h3>Diagnóstico estructurado, intervención controlada y verificación en Linux</h3>
+        <p class="small">Turno A (13:20 – 15:05) · Turno B (15:15 – 17:00) · Grupos A1–A6 / B1–B6</p>
+      </section>
+
+      <section>
+        <h2>Objetivos de Aprendizaje</h2>
+        <ul>
+          <li>Aplicar una metodología repetible en lugar de adivinar.</li>
+          <li>Separar <strong>síntomas</strong> observados de la <strong>causa raíz</strong>.</li>
+          <li>Usar comandos de diagnóstico en una VM <strong>Ubuntu Desktop</strong>.</li>
+          <li>Aplicar correcciones seguras (un cambio controlado cada vez) y verificar el resultado.</li>
+          <li>Documentar evidencias reales en el informe técnico y en GitHub.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Organización del Equipo (4–5 personas)</h2>
+        <table>
+          <thead>
+            <tr><th>Rol</th><th>Responsabilidad Principal</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Team Coordinator</strong></td><td>Gestiona tiempos, lee el incidente y valida decisiones del equipo.</td></tr>
+            <tr><td><strong>Lead Technician</strong></td><td>Ejecuta comandos y aplica cambios aprobados <em>(rotar en cada incidente)</em>.</td></tr>
+            <tr><td><strong>Evidence Recorder</strong></td><td>Registra síntomas, comandos, salidas exactas y marcas de tiempo.</td></tr>
+            <tr><td><strong>Verifier / Tester</strong></td><td>Define y ejecuta pruebas objetivas antes y después del cambio.</td></tr>
+            <tr><td><strong>Reporter</strong></td><td>Prepara la exposición final (en grupos de 4, se une al Coordinator).</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Metodología de Resolución (7 Pasos)</h2>
+        <ol>
+          <li><strong>Identify:</strong> Comprender qué falla, a quién afecta y cuándo empezó.</li>
+          <li><strong>Gather Evidence:</strong> Recopilar hechos y logs <em>antes</em> de tocar nada.</li>
+          <li><strong>Form a Hypothesis:</strong> Formular la causa más probable basada en evidencias.</li>
+          <li><strong>Test the Hypothesis:</strong> Realizar una prueba de bajo riesgo.</li>
+          <li><strong>Implement a Fix:</strong> Aplicar un único cambio reversible y aprobado.</li>
+          <li><strong>Verify:</strong> Repetir la prueba original y comprobar que nada más se rompió.</li>
+          <li><strong>Document:</strong> Registrar causa raíz, solución y evidencias verificables.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Fase Inicial: Toma de Línea Base (Baseline)</h2>
+        <p>Antes de resolver incidentes, verificad el snapshot <code>BASELINE – BEFORE WORKSHOP</code> y registrad el estado inicial:</p>
+        <pre><code class="language-bash">whoami ; hostname
+ip address
+ip route
+resolvectl status
+ping -c 4 1.1.1.1
+getent hosts example.com</code></pre>
+        <div class="box warn">
+          <strong>Regla de Seguridad:</strong> Todo el trabajo se realiza dentro de la VM aislada. Pedid aprobación al profesor antes de usar <code>sudo</code>.
+        </div>
+      </section>
+
+      <section>
+        <h2>Comandos Clave de Diagnóstico</h2>
+        <table>
+          <thead>
+            <tr><th>Propósito</th><th>Comando Ubuntu</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Interfaces e IP / Rutas</td><td><code>ip address</code> · <code>ip route</code></td></tr>
+            <tr><td>Conectividad y DNS</td><td><code>ping -c 4 1.1.1.1</code> · <code>getent hosts example.com</code> · <code>resolvectl status</code></td></tr>
+            <tr><td>Servicios y puertos</td><td><code>systemctl status <servicio></code> · <code>ss -tulpn</code></td></tr>
+            <tr><td>Logs recientes</td><td><code>journalctl -u <servicio> -n 30 --no-pager</code></td></tr>
+            <tr><td>Permisos y espacio</td><td><code>ls -ld <ruta></code> · <code>ls -l <archivo></code> · <code>df -h</code></td></tr>
+            <tr><td>Procesos y binarios</td><td><code>ps aux</code> · <code>file <ruta></code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Incidentes del Taller 1 (Cards 01 – 05)</h2>
+        <ul>
+          <li><strong>Incidente 01 – Configuración IP incorrecta:</strong> Sin alcance en red local; revisar interfaz, máscara y puerta de enlace.</li>
+          <li><strong>Incidente 02 – Fallo de resolución DNS:</strong> Conectividad por IP funcional, pero falla la resolución de dominios.</li>
+          <li><strong>Incidente 03 – Servicio del sistema detenido:</strong> Servicio inactivo o fallido; analizar estado y logs antes de reiniciar.</li>
+          <li><strong>Incidente 04 – Permisos de archivo incorrectos:</strong> Acceso denegado en carpeta de laboratorio <em>(prohibido <code>chmod 777</code>)</em>.</li>
+          <li><strong>Incidente 05 – Aplicación no arranca:</strong> Error al iniciar script o programa; revisar permisos, ruta y logs.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Incidente Sorpresa (Card 06)</h2>
+        <div class="box">
+          <p>En la recta final de la sesión recibiréis el <strong>Incidente 06</strong> sin pistas previas del profesor.</p>
+          <ul>
+            <li>Aplicad estrictamente los 7 pasos de la metodología.</li>
+            <li>Documentad la hipótesis antes de ejecutar cualquier cambio.</li>
+            <li>No basta con decir <em>«ya funciona»</em>: adjuntad la salida real del comando de verificación.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>Entrega en GitHub y Evaluación Cruzada</h2>
+        <ol>
+          <li><strong>Validación previa:</strong> Abrid el Issue <strong>Tarea 0</strong> al iniciar la sesión.</li>
+          <li><strong>Entrega del Taller 1:</strong> Abrid un Issue con la plantilla <strong>Tarea 1</strong> (<code>[TAREA-1][Grupo-XX]</code>) pegando vuestras evidencias.</li>
+          <li><strong>Evaluación Automática (60%):</strong> El bot verifica estructura, comandos, evidencias y seguridad.</li>
+          <li><strong>Auditoría Peer-to-Peer (40%):</strong> En la Tarea 1, cada grupo evalúa al siguiente de su turno (<code>A1→A2</code>, <code>A2→A3</code>... <code>A6→A1</code>) comentando <code>PEER-SCORE: XX</code>.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>¡Comenzamos!</h2>
+        <p>1. Iniciad la VM Ubuntu y verificad el snapshot <code>BASELINE – BEFORE WORKSHOP</code>.</p>
+        <p>2. Abrid vuestro Issue de <strong>Tarea 0</strong> en GitHub.</p>
+        <p>3. Asignad los roles del equipo y tomad la línea base.</p>
+        <p class="small">Atajos de presentación: <code>F</code> Pantalla completa · <code>S</code> Vista de ponente · <code>ESC</code> Vista general</p>
+      </section>
+
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({ hash: true, slideNumber: true, transition: 'slide' });
+  </script>
+</body>
+</html>
