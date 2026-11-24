@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Taller 1: IT Troubleshooting Challenge — IES Sa Colomina</title>
+  <title>Workshop 1: IT Troubleshooting Challenge — Alijó IT Workshops</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -14,64 +14,94 @@
       color: #f8fafc;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     }
-    .brand-logo {
+    .slide-header {
       position: fixed;
       top: 1.8vh;
-      right: 2.2vw;
-      height: 46px;
-      border-radius: 6px;
-      border: 1px solid #334155;
-      z-index: 90;
+      left: 2.2vw;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid #1e293b;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      z-index: 95;
+      pointer-events: none;
+    }
+    .brand-logo {
+      position: fixed;
+      top: 22px;
+      right: 28px;
+      width: 110px;
+      height: 75px;
+      object-fit: contain;
+      opacity: 0.85;
+      z-index: 95;
+      pointer-events: none;
+    }
+    .slide-footer {
+      position: fixed;
+      bottom: 1.8vh;
+      left: 2.2vw;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid #1e293b;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      z-index: 95;
+      pointer-events: none;
     }
     .deck { width: 100vw; height: 100vh; position: relative; }
     .slide {
       display: none;
       width: 100vw;
       height: 100vh;
-      padding: 5vh 5vw 8vh 5vw;
+      padding: 8vh 5vw 8.5vh 5vw;
       flex-direction: column;
       justify-content: center;
-      font-size: clamp(16px, 1.5vw, 25px);
+      font-size: clamp(16px, 1.48vw, 24px);
       line-height: 1.42;
     }
     .slide.active { display: flex; }
     .slide.center { text-align: center; align-items: center; }
-    .slide.steps-bg {
-      background: linear-gradient(rgba(9, 13, 22, 0.80), rgba(15, 23, 42, 0.88)),
-                  url("../assets/images/diagram-7-steps.jpg") center center / cover no-repeat;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
-    }
     .slide.cover-bg {
-      background: linear-gradient(rgba(9, 13, 22, 0.72), rgba(15, 23, 42, 0.85)),
+      background: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.65)),
                   url("../assets/images/cover-w1.jpg") center center / cover no-repeat;
-      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
     }
-    .two-col {
+    .split-right {
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 2vw;
+      grid-template-columns: 58% 40%;
+      gap: 2%;
       align-items: center;
       width: 100%;
     }
-    h1 { font-size: clamp(2rem, 3.4vw, 3.4rem); color: #38bdf8; margin-bottom: 0.35em; }
+    .split-right img {
+      width: 100%;
+      max-height: 64vh;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+    h1 { font-size: clamp(2.1rem, 3.5vw, 3.5rem); color: #38bdf8; margin-bottom: 0.35em; }
     h2 {
-      font-size: clamp(1.35rem, 2.3vw, 2.2rem);
+      font-size: clamp(1.35rem, 2.25vw, 2.15rem);
       color: #38bdf8;
       border-bottom: 2px solid #1e293b;
       padding-bottom: 0.22em;
       margin-bottom: 0.55em;
       width: 100%;
     }
-    h3 { font-size: clamp(1.05rem, 1.7vw, 1.6rem); color: #e2e8f0; font-weight: 400; margin-bottom: 0.6em; }
+    h3 { font-size: clamp(1.05rem, 1.65vw, 1.55rem); color: #e2e8f0; font-weight: 400; margin-bottom: 0.55em; }
+    p { margin-bottom: 0.45em; }
     ul, ol { margin-left: 1.35em; width: 100%; }
-    li { margin-bottom: 0.4em; }
+    li { margin-bottom: 0.38em; }
     code {
       background: #1e293b;
       color: #7dd3fc;
       padding: 0.1em 0.35em;
       border-radius: 5px;
       font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
-      font-size: 0.92em;
+      font-size: 0.9em;
     }
     pre {
       width: 100%;
@@ -79,50 +109,31 @@
       border: 1px solid #334155;
       border-left: 5px solid #38bdf8;
       border-radius: 8px;
-      padding: 0.9em 1.1em;
+      padding: 0.85em 1.05em;
       margin: 0.45em 0;
       overflow: auto;
-      max-height: 52vh;
     }
     pre code {
       background: transparent;
       color: #f8fafc;
       padding: 0;
-      font-size: clamp(0.88rem, 1.25vw, 1.2rem);
+      font-size: clamp(0.82rem, 1.12vw, 1.08rem);
       line-height: 1.45;
       display: block;
       white-space: pre;
     }
-    table { width: 100%; border-collapse: collapse; font-size: 0.86em; }
-    th, td { padding: 0.5em 0.7em; border-bottom: 1px solid #334155; text-align: left; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.84em; }
+    th, td { padding: 0.45em 0.65em; border-bottom: 1px solid #334155; text-align: left; }
     th { background: #1e293b; color: #38bdf8; }
     .box {
       width: 100%;
-      background: #1e293b;
+      background: rgba(30, 41, 59, 0.9);
       border-left: 5px solid #38bdf8;
-      padding: 0.8em 1.15em;
+      padding: 0.75em 1.1em;
       border-radius: 8px;
-      margin-top: 0.55em;
+      margin-top: 0.5em;
     }
-    .warn { border-left-color: #f59e0b; background: #1f1b16; }
-    .small { font-size: 0.78em; color: #94a3b8; }
-    .slide img.hero {
-      max-width: 72vw;
-      max-height: 36vh;
-      object-fit: cover;
-      border-radius: 12px;
-      border: 1px solid #334155;
-      margin: 0.6em auto;
-      display: block;
-    }
-    .slide img.diagram {
-      width: 100%;
-      max-height: 62vh;
-      object-fit: contain;
-      border-radius: 10px;
-      border: 1px solid #334155;
-      background: #0b1120;
-    }
+    .small { font-size: 0.78em; color: #cbd5e1; }
     aside.notes { display: none; }
     .controls {
       position: fixed;
@@ -153,166 +164,252 @@
   </style>
 </head>
 <body>
+  <header class="slide-header">Alijó IT Workshops | Workshop 1: IT Troubleshooting Challenge</header>
   <img class="brand-logo" src="../assets/images/logo-ies-sa-colomina-dark.jpg" alt="IES Sa Colomina">
 
   <div class="deck">
 
+    <!-- Portada -->
     <section class="slide center cover-bg active">
-      <p class="small">IES Sa Colomina · Alijó IT Workshops · Workshop 1 (W1)</p>
-      <h1>IT Troubleshooting Challenge</h1>
-      <h3>Diagnóstico estructurado, intervención controlada y verificación en Linux</h3>
-      <p class="small">Turno A (13:20 – 15:05) · Turno B (15:15 – 17:00) · Grupos A1–A6 / B1–B6</p>
+      <h1>Workshop 1: IT Troubleshooting Challenge</h1>
+      <h3>Practical Approaches to IT Projects and Problem-Solving</h3>
+      <p><strong>Agrupamento de Escolas D. Sancho II, Alijó</strong></p>
+      <p><em>Ponente: Juan José Bonnín Sansó (IES Sa Colomina)</em></p>
       <aside class="notes">
-        <strong>Bloque 00:00 – 00:15 (15 min):</strong> Bienvenida, formación de equipos (4–5 alumnos) y comprobación de que VirtualBox y el snapshot <code>BASELINE – BEFORE WORKSHOP</code> están listos.
+        <strong>Portada:</strong> Presentación del taller y bienvenida al Agrupamento de Escolas D. Sancho II, Alijó.
       </aside>
     </section>
 
-    <section class="slide">
-      <h2>Objetivos de Aprendizaje</h2>
+    <!-- Slide 0 -->
+    <section class="slide cover-bg">
+      <h2>0. Workshop 1: IT Troubleshooting Challenge</h2>
+      <h3>Practical Approaches to IT Projects and Problem-Solving</h3>
+      <p><strong>Alijó IT Workshops</strong></p>
       <ul>
-        <li>Aplicar una metodología repetible en lugar de adivinar.</li>
-        <li>Separar <strong>síntomas</strong> observados de la <strong>causa raíz</strong>.</li>
-        <li>Usar comandos de diagnóstico en una VM <strong>Ubuntu Desktop</strong>.</li>
-        <li>Aplicar correcciones seguras (un cambio controlado cada vez) y verificar el resultado.</li>
-        <li>Documentar evidencias reales en el informe técnico y en GitHub.</li>
+        <li><strong>Duration:</strong> 180 Minutes (3 Hours)</li>
+        <li><strong>Format:</strong> Team-based Hands-On Lab (4–5 students per team)</li>
+        <li><strong>Environment:</strong> Ubuntu Desktop VM (Oracle VM VirtualBox)</li>
       </ul>
-      <p class="small" style="margin-top: 1em;">Controles: Flechas <code>←</code> <code>→</code> · <code>S</code> Vista del orador · <code>F11</code> Pantalla completa</p>
+      <p class="small" style="margin-top: 1.2em;">Controles: Flechas <code>←</code> <code>→</code> · <code>S</code> Vista del orador · <code>F11</code> Pantalla completa</p>
       <aside class="notes">
-        Recalcar que <strong>no se evalúa solo arreglar el fallo</strong>, sino el rastro de comandos y evidencias antes y después del cambio.
+        <strong>Notas del orador (00–05 min):</strong><br>
+        • Da la bienvenida al equipo y presenta el objetivo central: dejar de adivinar ("probar comandos al azar") y trabajar como un equipo real de soporte nivel 2.<br>
+        • Confirma que todos tienen VirtualBox abierto y la VM lista.
       </aside>
     </section>
 
+    <!-- Slide 1 -->
     <section class="slide">
-      <h2>Organización del Equipo (4–5 personas)</h2>
-      <table>
-        <thead>
-          <tr><th>Rol</th><th>Responsabilidad Principal</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Team Coordinator</strong></td><td>Gestiona tiempos, lee el incidente y valida decisiones del equipo.</td></tr>
-          <tr><td><strong>Lead Technician</strong></td><td>Ejecuta comandos y aplica cambios aprobados <em>(rotar en cada incidente)</em>.</td></tr>
-          <tr><td><strong>Evidence Recorder</strong></td><td>Registra síntomas, comandos, salidas exactas y marcas de tiempo.</td></tr>
-          <tr><td><strong>Verifier / Tester</strong></td><td>Define y ejecuta pruebas objetivas antes y después del cambio.</td></tr>
-          <tr><td><strong>Reporter</strong></td><td>Prepara la exposición final (en grupos de 4, se une al Coordinator).</td></tr>
-        </tbody>
-      </table>
-      <aside class="notes">
-        Exigir que el <strong>Lead Technician</strong> rote en cada tarjeta de incidente para que todos operen la terminal Linux.
-      </aside>
-    </section>
-
-    <section class="slide steps-bg">
-      <h2>Metodología de Resolución (7 Pasos)</h2>
+      <h2>1. Mission & Learning Outcomes</h2>
+      <p>By the end of this 3-hour challenge, your team will be able to:</p>
       <ol>
-          <li><strong>Identify:</strong> Comprender qué falla y a quién afecta.</li>
-          <li><strong>Gather Evidence:</strong> Recopilar hechos y logs <em>antes</em> de tocar nada.</li>
-          <li><strong>Form a Hypothesis:</strong> Formular la causa más probable.</li>
-          <li><strong>Test the Hypothesis:</strong> Realizar una prueba de bajo riesgo.</li>
-          <li><strong>Implement a Fix:</strong> Aplicar un único cambio reversible y aprobado.</li>
-          <li><strong>Verify:</strong> Repetir la prueba original y comprobar el sistema.</li>
-          <li><strong>Document:</strong> Registrar causa raíz, solución y evidencias.</li>
-        </ol>
-      <aside class="notes">
-        <strong>Bloque 00:15 – 00:35 (20 min):</strong> Explicar la diferencia entre síntoma (ej. "no abre la web") y causa raíz ("DNS mal configurado o servicio detenido").
-      </aside>
-    </section>
-
-    <section class="slide">
-      <h2>Fase Inicial: Toma de Línea Base (Baseline)</h2>
-      <p>Antes de resolver incidentes, verificad el snapshot <code>BASELINE – BEFORE WORKSHOP</code> y registrad el estado inicial:</p>
-      <pre><code>whoami ; hostname
-ip address
-ip route
-resolvectl status
-ping -c 4 1.1.1.1
-getent hosts example.com</code></pre>
-      <div class="box warn">
-        <strong>Regla de Seguridad:</strong> Todo el trabajo se realiza dentro de la VM aislada. Pedid aprobación al profesor antes de usar <code>sudo</code>.
-      </div>
-      <aside class="notes">
-        <strong>Bloque 00:35 – 00:55 (20 min):</strong> Comprobar que todos los grupos guardan la salida de su baseline en <code>Incident-Log.md</code> antes de inyectar los fallos.
-      </aside>
-    </section>
-
-    <section class="slide">
-      <h2>Comandos Clave de Diagnóstico</h2>
-      <table>
-        <thead>
-          <tr><th>Propósito</th><th>Comando Ubuntu</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Interfaces e IP / Rutas</td><td><code>ip address</code> · <code>ip route</code></td></tr>
-          <tr><td>Conectividad y DNS</td><td><code>ping -c 4 1.1.1.1</code> · <code>getent hosts example.com</code> · <code>resolvectl status</code></td></tr>
-          <tr><td>Servicios y puertos</td><td><code>systemctl status <servicio></code> · <code>ss -tulpn</code></td></tr>
-          <tr><td>Logs recientes</td><td><code>journalctl -u <servicio> -n 30 --no-pager</code></td></tr>
-          <tr><td>Permisos y espacio</td><td><code>ls -ld <ruta></code> · <code>ls -l <archivo></code> · <code>df -h</code></td></tr>
-          <tr><td>Procesos y binarios</td><td><code>ps aux</code> · <code>file <ruta></code></td></tr>
-        </tbody>
-      </table>
-      <aside class="notes">
-        Dejar esta diapositiva proyectada como referencia rápida durante la ronda de resolución de incidentes.
-      </aside>
-    </section>
-
-    <section class="slide">
-      <h2>Incidentes del Taller 1 (Cards 01 – 05)</h2>
-      <ul>
-        <li><strong>Incidente 01 – Configuración IP incorrecta:</strong> Sin alcance en red local; revisar interfaz, máscara y puerta de enlace.</li>
-        <li><strong>Incidente 02 – Fallo de resolución DNS:</strong> Conectividad por IP funcional, pero falla la resolución de dominios.</li>
-        <li><strong>Incidente 03 – Servicio del sistema detenido:</strong> Servicio inactivo o fallido; analizar estado y logs antes de reiniciar.</li>
-        <li><strong>Incidente 04 – Permisos de archivo incorrectos:</strong> Acceso denegado en carpeta de laboratorio <em>(prohibido <code>chmod 777</code>)</em>.</li>
-        <li><strong>Incidente 05 – Aplicación no arranca:</strong> Error al iniciar script o programa; revisar permisos, ruta y logs.</li>
-      </ul>
-      <aside class="notes">
-        <strong>Bloque 00:55 – 01:55 (60 min):</strong> Repartir 3–4 tarjetas por grupo. Verificar que ningún grupo aplique <code>chmod 777</code> ni desactive el firewall.
-      </aside>
-    </section>
-
-    <section class="slide">
-      <h2>Incidente Sorpresa (Card 06)</h2>
-      <div class="box">
-        <p>En la recta final de la sesión recibiréis el <strong>Incidente 06</strong> sin pistas previas del profesor.</p>
-        <ul>
-          <li>Aplicad estrictamente los 7 pasos de la metodología.</li>
-          <li>Documentad la hipótesis antes de ejecutar cualquier cambio.</li>
-          <li>No basta con decir <em>«ya funciona»</em>: adjuntad la salida real del comando de verificación.</li>
-        </ul>
-      </div>
-      <aside class="notes">
-        <strong>Bloque 01:55 – 02:20 (25 min):</strong> Entregar el Incidente 06 sin pistas. Observar qué grupos siguen la metodología frente a los que prueban comandos al azar.
-      </aside>
-    </section>
-
-    <section class="slide">
-      <h2>Entrega en GitHub y Evaluación Cruzada</h2>
-      <ol>
-        <li><strong>Validación previa:</strong> Abrid el Issue <strong>Tarea 0</strong> al iniciar la sesión.</li>
-        <li><strong>Entrega del Taller 1:</strong> Abrid un Issue con la plantilla <strong>Tarea 1</strong> (<code>[TAREA-1][Grupo-XX]</code>) pegando vuestras evidencias.</li>
-        <li><strong>Evaluación Automática (60%):</strong> El bot verifica estructura, comandos, evidencias y seguridad.</li>
-        <li><strong>Auditoría Peer-to-Peer (40%):</strong> En la Tarea 1, cada grupo evalúa al siguiente de su turno (<code>A1→A2</code>, <code>A2→A3</code>... <code>A6→A1</code>) comentando <code>PEER-SCORE: XX</code>.</li>
+        <li><strong>Follow a repeatable 7-step methodology</strong> instead of guessing.</li>
+        <li><strong>Distinguish symptoms from root causes</strong> using verifiable CLI evidence.</li>
+        <li><strong>Diagnose Linux system, network, DNS, and service faults</strong> safely.</li>
+        <li><strong>Apply controlled, reversible fixes</strong> without breaking unrelated services.</li>
+        <li><strong>Document findings and proof</strong> in a professional Technical Incident Report.</li>
       </ol>
       <aside class="notes">
-        <strong>Bloque 02:20 – 03:00 (40 min):</strong> Compilación de evidencias en GitHub, revisión cruzada <code>PEER-SCORE: XX</code> y exposiciones breves de 2–3 minutos por equipo.
+        <strong>Notas del orador (05–10 min):</strong><br>
+        • Recalca que "ya funciona" no es una respuesta válida sin evidencia (salida de comando o captura antes/después).
       </aside>
     </section>
 
-    <section class="slide center">
-      <h2>¡Comenzamos!</h2>
-      <p>1. Iniciad la VM Ubuntu y verificad el snapshot <code>BASELINE – BEFORE WORKSHOP</code>.</p>
-      <p>2. Abrid vuestro Issue de <strong>Tarea 0</strong> en GitHub.</p>
-      <p>3. Asignad los roles del equipo y tomad la línea base.</p>
-      <p class="small">Controles: Flechas <code>←</code> <code>→</code> · <code>S</code> Vista del orador · <code>F11</code> Pantalla completa</p>
+    <!-- Slide 2 -->
+    <section class="slide">
+      <h2>2. Three-Hour Session Roadmap (180 Min)</h2>
+      <table>
+        <thead>
+          <tr><th>Block</th><th>Duration</th><th>Activity</th><th>Team Deliverable</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1</strong></td><td>15 min</td><td>Briefing, safety rules & team role assignment</td><td>Roles assigned</td></tr>
+          <tr><td><strong>2</strong></td><td>20 min</td><td>7-Step Troubleshooting Methodology</td><td>Method review</td></tr>
+          <tr><td><strong>3</strong></td><td>20 min</td><td>VM Baseline Inspection & Snapshot verification</td><td><code>Baseline-Record</code></td></tr>
+          <tr><td><strong>4</strong></td><td>60 min</td><td><strong>Incident-Solving Rounds (3–4 Incident Cards)</strong></td><td>Incident Logs</td></tr>
+          <tr><td><strong>5</strong></td><td>25 min</td><td><strong>Surprise Incident</strong> (timed live fault)</td><td>Live recovery</td></tr>
+          <tr><td><strong>6</strong></td><td>20 min</td><td>Final verification & Incident Report completion</td><td><code>Final-Report.md</code></td></tr>
+          <tr><td><strong>7</strong></td><td>20 min</td><td>Team presentations & debrief</td><td>3-min pitch</td></tr>
+        </tbody>
+      </table>
       <aside class="notes">
-        Recordar a los coordinadores abrir primero el Issue <strong>Tarea 0</strong> antes de tocar la VM.
+        <strong>Notas del orador (10–12 min):</strong><br>
+        • Avisa de que los tiempos son estrictos y que deben reservar siempre los últimos 20 minutos para cerrar el informe técnico antes de exponer.
+      </aside>
+    </section>
+
+    <!-- Slide 3 -->
+    <section class="slide">
+      <h2>3. Team Roles & Rotation Rules</h2>
+      <p>Every team (4–5 members) operates with clear operational roles:</p>
+      <ul>
+        <li><strong>Team Coordinator:</strong> Keeps time, reads the incident card, validates team consensus before any change. <em>(In teams of 4, combines with Reporter)</em>.</li>
+        <li><strong>Lead Technician:</strong> Executes diagnostic commands and approved fixes on the terminal.</li>
+        <li><strong>Evidence Recorder:</strong> Captures symptoms, exact commands, outputs, and timestamps.</li>
+        <li><strong>Verifier / Tester:</strong> Defines and runs the acceptance test proving recovery.</li>
+        <li><strong>Reporter:</strong> Synthesizes findings and presents the post-mortem.</li>
+      </ul>
+      <div class="box">
+        <strong>Mandatory Rule:</strong> Rotate the <strong>Lead Technician</strong> role after every incident so every student drives the CLI.
+      </div>
+      <aside class="notes">
+        <strong>Notas del orador (12–15 min):</strong><br>
+        • Pide que cada equipo elija ahora mismo quién empieza como Lead Technician y quién registra evidencias.
+      </aside>
+    </section>
+
+    <!-- Slide 4 -->
+    <section class="slide">
+      <h2>4. Non-Negotiable Lab Safety Rules</h2>
+      <p>Before touching any configuration file, verify these <strong>5 golden rules</strong>:</p>
+      <ol>
+        <li><strong>Snapshot First:</strong> Confirm <code>BASELINE – BEFORE WORKSHOP</code> exists in VirtualBox before starting.</li>
+        <li><strong>VM Only:</strong> Run diagnostics exclusively inside the disposable Ubuntu VM — never on the host PC.</li>
+        <li><strong>Never Touch Campus Network:</strong> Do not modify host Wi-Fi/Ethernet, router, or school DHCP settings.</li>
+        <li><strong>One Change at a Time:</strong> Never apply multiple edits simultaneously; test after each action.</li>
+        <li><strong>No Destructive Shortcuts:</strong> Never use <code>chmod 777</code>, <code>rm -rf</code> on system paths, or disable firewalls to mask a problem.</li>
+      </ol>
+      <aside class="notes">
+        <strong>Notas del orador (15–20 min):</strong><br>
+        • Pide a todos los equipos que te muestren en pantalla el snapshot <code>BASELINE – BEFORE WORKSHOP</code> antes de pasar a la metodología.
+      </aside>
+    </section>
+
+    <!-- Slide 5 -->
+    <section class="slide">
+      <h2>5. The 7-Step Troubleshooting Methodology</h2>
+      <div class="split-right">
+        <div>
+          <p>Follow these steps <strong>strictly in order</strong> for every incident card:</p>
+          <pre><code>[1. Identify & Reproduce] ──▶ [2. Gather Baseline Info] ──▶ [3. Form Hypotheses]
+                                                                     │
+[7. Document & Close] ◀── [6. Verify & Regression Test] ◀── [4. Test & Isolate]
+                                                                     │
+                                                           [5. Controlled Fix]</code></pre>
+          <ul>
+            <li><strong>Golden Principle:</strong> Never jump from Step 1 (Symptom) directly to Step 5 (Fix).</li>
+            <li>If Step 6 fails, <strong>revert your change</strong> and return to Step 3 with new evidence.</li>
+          </ul>
+        </div>
+        <img src="../assets/images/diagram-7-steps.jpg" alt="7-Step Troubleshooting Methodology">
+      </div>
+      <aside class="notes">
+        <strong>Notas del orador (20–30 min):</strong><br>
+        • Pon un ejemplo rápido: "Si una web no carga, reiniciar el servidor a ciegas no diagnostica si el fallo era DNS, firewall o el proceso caído".
+      </aside>
+    </section>
+
+    <!-- Slide 6 -->
+    <section class="slide">
+      <h2>6. Step 2 & 4 Toolkit: Essential Linux Diagnostics</h2>
+      <p>Use targeted commands by layer instead of random trial-and-error:</p>
+      <table>
+        <thead>
+          <tr><th>Layer</th><th>Diagnostic Commands</th><th>What It Proves</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>System & Resources</strong></td><td><code>uptime</code>, <code>df -h</code>, <code>free -h</code>, <code>ps aux</code></td><td>Disk full, RAM exhaustion, hung processes</td></tr>
+          <tr><td><strong>Services & Logs</strong></td><td><code>systemctl status <svc></code>, <code>journalctl -xe</code></td><td>Crashed daemons, config syntax errors</td></tr>
+          <tr><td><strong>Network Link & IP</strong></td><td><code>ip -br a</code>, <code>ip route</code>, <code>ping -c 3 <GW></code></td><td>Interface down, wrong IP/subnet, missing gateway</td></tr>
+          <tr><td><strong>DNS & Ports</strong></td><td><code>resolvectl status</code>, <code>dig</code>, <code>ss -tulpn</code>, <code>curl -I</code></td><td>Broken name resolution, closed listening port</td></tr>
+          <tr><td><strong>Permissions & Files</strong></td><td><code>ls -la <path></code>, <code>id</code>, <code>namei -l <path></code></td><td>Ownership mismatch, missing <code>r</code>/<code>x</code> bits</td></tr>
+        </tbody>
+      </table>
+      <aside class="notes">
+        <strong>Notas del orador (30–35 min):</strong><br>
+        • Deja esta diapositiva proyectada o impresa como referencia rápida durante la fase de inspección inicial.
+      </aside>
+    </section>
+
+    <!-- Slide 7 -->
+    <section class="slide">
+      <h2>7. Phase 3: Initial VM Baseline Inspection (20 Min)</h2>
+      <p>Before any faults are injected, inspect your healthy VM and record:</p>
+      <ol>
+        <li><strong>OS & Kernel:</strong> <code>hostnamectl</code></li>
+        <li><strong>Network Interface & IPv4:</strong> <code>ip -br -4 addr</code> and <code>ip route</code></li>
+        <li><strong>DNS Resolver:</strong> <code>resolvectl status</code> (or <code>/etc/resolv.conf</code>)</li>
+        <li><strong>Disk & Memory:</strong> <code>df -h /</code> and <code>free -h</code></li>
+        <li><strong>Active Services & Ports:</strong> <code>ss -tulpn</code></li>
+      </ol>
+      <div class="box">
+        <strong>Checkpoint:</strong> You cannot spot what changed during an outage if you never measured what "healthy" looked like.
+      </div>
+      <aside class="notes">
+        <strong>Notas del orador (35–55 min):</strong><br>
+        • Recorre las mesas comprobando que los equipos anotan la IP de su VM, la puerta de enlace y el servidor DNS activo.
+      </aside>
+    </section>
+
+    <!-- Slide 8 -->
+    <section class="slide">
+      <h2>8. Phase 4 & 5: Incident Rounds & Surprise Challenge</h2>
+      <h3>Round 1 — Assigned Incident Cards (60 Min)</h3>
+      <ul>
+        <li>Solve <strong>3–4 structured incidents</strong> (network, DNS, permissions, background service/script).</li>
+        <li>Log every command and output in your <code>Incident-Log.md</code> <strong>before</strong> applying any fix.</li>
+        <li>Call the instructor for a quick checkpoint verification after each resolved card.</li>
+      </ul>
+      <h3 style="margin-top: 0.7em;">Round 2 — Surprise Incident (25 Min)</h3>
+      <ul>
+        <li>Restored baseline + <strong>unannounced live fault</strong> injected by the instructor.</li>
+        <li>Full 7-step methodology under realistic time pressure.</li>
+      </ul>
+      <aside class="notes">
+        <strong>Notas del orador (55–140 min):</strong><br>
+        • Entrega las tarjetas de incidentes progresivamente; si un equipo se atasca más de 12 minutos en una pista, haz una pregunta guía ("¿Qué dice la capa inferior?") en lugar de dar el comando.
+      </aside>
+    </section>
+
+    <!-- Slide 9 -->
+    <section class="slide">
+      <h2>9. Evidence Standards & Final Report (<code>Final-Report.md</code>)</h2>
+      <p>A professional incident report requires <strong>verifiable proof</strong>, not summaries:</p>
+      <ul>
+        <li><strong>Weak (0 pts):</strong> <em>"We fixed the network and now it works."</em></li>
+        <li><strong>Strong (Full pts):</strong>
+          <ul>
+            <li><strong>Before:</strong> <code>ping -c 2 intranet.alijo.local</code> → <code>Temporary failure in name resolution</code></li>
+            <li><strong>Root Cause:</strong> <code>/etc/resolv.conf</code> pointed to an unreachable nameserver (<code>192.0.2.99</code>).</li>
+            <li><strong>Fix:</strong> Restored valid DNS resolver and verified <code>dig intranet.alijo.local +short</code> → <code>192.168.10.10</code>.</li>
+            <li><strong>After:</strong> <code>curl -I http://intranet.alijo.local:8080</code> → <code>HTTP/1.1 200 OK</code>.</li>
+          </ul>
+        </li>
+      </ul>
+      <aside class="notes">
+        <strong>Notas del orador (140–160 min):</strong><br>
+        • Recuerda a los equipos que peguen las salidas reales de terminal en las secciones 4, 7 y 8 de <code>Final-Report.md</code>.
+      </aside>
+    </section>
+
+    <!-- Slide 10 -->
+    <section class="slide">
+      <h2>10. Final Presentations & Evaluation Criteria (20 Min)</h2>
+      <p>Each team delivers a <strong>3-minute technical briefing</strong> covering:</p>
+      <ol>
+        <li><strong>Incident Overview:</strong> Symptoms & business impact.</li>
+        <li><strong>Diagnostic Trail:</strong> Key commands that isolated the root cause (and dead ends ruled out).</li>
+        <li><strong>Fix & Verification:</strong> Exact change applied and proof of recovery.</li>
+        <li><strong>Prevention:</strong> One concrete safeguard to prevent recurrence.</li>
+      </ol>
+      <div class="box">
+        <strong>Grading Weights (100 Points):</strong> Methodology & Safety Discipline (<strong>30 pts</strong>) · Diagnostic Accuracy & Root Cause (<strong>30 pts</strong>) · Controlled Fix & Verification (<strong>25 pts</strong>) · Technical Report & Presentation (<strong>15 pts</strong>)
+      </div>
+      <aside class="notes">
+        <strong>Notas del orador (160–180 min):</strong><br>
+        • Modera presentaciones de 3 minutos + 1 pregunta técnica por equipo.<br>
+        • Al terminar, asegúrate de que todos restauran el snapshot <code>BASELINE – BEFORE WORKSHOP</code>.
       </aside>
     </section>
 
   </div>
 
+  <footer class="slide-footer">Practical Approaches to IT Projects and Problem-Solving</footer>
+
   <div class="controls">
     <a href="../index.html" title="Índice">⌂</a>
     <button onclick="go(-1)" title="Anterior (←)">◀</button>
-    <span id="counter">1 / 10</span>
+    <span id="counter">1 / 12</span>
     <button onclick="go(1)" title="Siguiente (→)">▶</button>
     <button onclick="openSpeakerView()" title="Vista del Orador (S)">🎤 Orador</button>
     <button onclick="toggleFull()" title="Pantalla completa">⛶</button>
@@ -326,7 +423,7 @@ getent hosts example.com</code></pre>
 
     function getSlideTitle(slideEl, i) {
       const h = slideEl.querySelector('h1, h2');
-      return h ? h.textContent.trim() : `Diapositiva ${i + 1}`;
+      return h ? h.textContent.trim() : `Slide ${i + 1}`;
     }
 
     function getSlideNotes(slideEl) {
@@ -341,8 +438,7 @@ getent hosts example.com</code></pre>
       if (!curTitle) return;
       curTitle.textContent = `${idx + 1} / ${slides.length} — ${getSlideTitle(slides[idx], idx)}`;
       doc.getElementById('sp-cur-body').innerHTML = slides[idx].innerHTML;
-      const notesEl = doc.getElementById('sp-notes');
-      notesEl.innerHTML = getSlideNotes(slides[idx]);
+      doc.getElementById('sp-notes').innerHTML = getSlideNotes(slides[idx]);
       if (idx + 1 < slides.length) {
         doc.getElementById('sp-next-title').textContent = `Siguiente (${idx + 2}/${slides.length}): ${getSlideTitle(slides[idx + 1], idx + 1)}`;
         doc.getElementById('sp-next-body').innerHTML = slides[idx + 1].innerHTML;
@@ -379,14 +475,14 @@ getent hosts example.com</code></pre>
       }
       speakerWin = window.open('', 'AlijoSpeakerView', 'width=1100,height=720');
       if (!speakerWin) {
-        alert('El navegador bloqueó la ventana emergente. Permite pop-ups para este sitio o pulsa el botón "🎤 Orador".');
+        alert('El navegador bloqueó la ventana emergente. Permite pop-ups para este sitio o pulsa "🎤 Orador".');
         return;
       }
       speakerWin.document.write(`<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>Vista del Orador — Taller 1</title>
+  <title>Vista del Orador — Workshop 1</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #090d16; color: #f8fafc; font-family: system-ui, sans-serif; height: 100vh; display: grid; grid-template-rows: 54px 1fr; }
@@ -401,10 +497,10 @@ getent hosts example.com</code></pre>
     .preview { font-size: 0.82rem; line-height: 1.35; }
     .preview img { max-width: 100%; max-height: 140px; object-fit: contain; margin-top: 0.4rem; }
     .preview aside.notes { display: none; }
-    .preview pre { background: #090d16; padding: 0.5rem; border-radius: 6px; margin-top: 0.4rem; font-size: 0.78rem; }
+    .preview pre { background: #090d16; padding: 0.5rem; border-radius: 6px; margin-top: 0.4rem; font-size: 0.75rem; }
     .preview table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
     .preview th, .preview td { border-bottom: 1px solid #334155; padding: 0.25rem; text-align: left; }
-    .notes-box { flex: 1; font-size: 1.15rem; line-height: 1.55; color: #fef08a; background: #171712; border-color: #854d0e; }
+    .notes-box { flex: 1; font-size: 1.12rem; line-height: 1.55; color: #fef08a; background: #171712; border-color: #854d0e; }
   </style>
 </head>
 <body>
@@ -430,7 +526,7 @@ getent hosts example.com</code></pre>
     </div>
     <div class="col">
       <div class="panel notes-box">
-        <h4>Notas del Profesor</h4>
+        <h4>Notas del Orador</h4>
         <div id="sp-notes"></div>
       </div>
     </div>
