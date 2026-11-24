@@ -3,267 +3,303 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Taller 1: IT Troubleshooting Challenge</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <title>Taller 1: IT Troubleshooting Challenge — IES Sa Colomina</title>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #0f172a;
-    }
-    .reveal {
       width: 100vw;
       height: 100vh;
-      font-size: clamp(18px, 2.1vw, 32px);
+      overflow: hidden;
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     }
-    .reveal .slides {
-      text-align: left;
+    .brand-logo {
+      position: fixed;
+      top: 1.8vh;
+      right: 2.2vw;
+      height: 46px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      z-index: 90;
     }
-    .reveal .slides section {
-      width: 92vw !important;
-      max-width: 1400px;
-      height: 90vh;
-      margin: 0 auto;
-      padding: 2vh 2vw !important;
-      box-sizing: border-box;
-      display: flex !important;
+    .deck { width: 100vw; height: 100vh; position: relative; }
+    .slide {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      padding: 5vh 5vw 8vh 5vw;
       flex-direction: column;
       justify-content: center;
-    }
-    .reveal .slides section.center-slide {
-      text-align: center;
-      align-items: center;
-    }
-    .reveal h1 {
-      font-size: 2.1em;
-      color: #38bdf8;
-      text-transform: none;
-      margin-bottom: 0.3em;
-    }
-    .reveal h2 {
-      font-size: 1.45em;
-      color: #38bdf8;
-      text-transform: none;
-      border-bottom: 2px solid #1e293b;
-      padding-bottom: 0.25em;
-      margin-bottom: 0.5em;
-    }
-    .reveal h3 {
-      font-size: 1.15em;
-      color: #e2e8f0;
-      text-transform: none;
-    }
-    .reveal ul, .reveal ol {
-      font-size: 0.92em;
+      font-size: clamp(16px, 1.5vw, 25px);
       line-height: 1.42;
-      margin-left: 1.2em;
     }
-    .reveal li {
-      margin-bottom: 0.4em;
+    .slide.active { display: flex; }
+    .slide.center { text-align: center; align-items: center; }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 2vw;
+      align-items: center;
+      width: 100%;
     }
-    .reveal code {
+    h1 { font-size: clamp(2rem, 3.4vw, 3.4rem); color: #38bdf8; margin-bottom: 0.35em; }
+    h2 {
+      font-size: clamp(1.35rem, 2.3vw, 2.2rem);
+      color: #38bdf8;
+      border-bottom: 2px solid #1e293b;
+      padding-bottom: 0.22em;
+      margin-bottom: 0.55em;
+      width: 100%;
+    }
+    h3 { font-size: clamp(1.05rem, 1.7vw, 1.6rem); color: #e2e8f0; font-weight: 400; margin-bottom: 0.6em; }
+    ul, ol { margin-left: 1.35em; width: 100%; }
+    li { margin-bottom: 0.4em; }
+    code {
       background: #1e293b;
       color: #7dd3fc;
-      padding: 0.12em 0.38em;
+      padding: 0.1em 0.35em;
       border-radius: 5px;
       font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
-      font-size: 0.9em;
+      font-size: 0.92em;
     }
-    .reveal pre {
+    pre {
       width: 100%;
-      margin: 0.5em 0;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-    }
-    .reveal pre code {
-      display: block;
-      background: #090d16 !important;
-      color: #f8fafc !important;
+      background: #090d16;
       border: 1px solid #334155;
       border-left: 5px solid #38bdf8;
       border-radius: 8px;
-      padding: 0.85em 1.1em;
-      font-size: 0.95em;
-      line-height: 1.45;
+      padding: 0.9em 1.1em;
+      margin: 0.45em 0;
+      overflow: auto;
       max-height: 52vh;
-      overflow-y: auto;
     }
-    .reveal table {
-      font-size: 0.78em;
-      width: 100%;
-      border-collapse: collapse;
+    pre code {
+      background: transparent;
+      color: #f8fafc;
+      padding: 0;
+      font-size: clamp(0.88rem, 1.25vw, 1.2rem);
+      line-height: 1.45;
+      display: block;
+      white-space: pre;
     }
-    .reveal th, .reveal td {
-      padding: 0.48em 0.7em;
-      border-bottom: 1px solid #334155;
-    }
-    .reveal th {
-      background: #1e293b;
-      color: #38bdf8;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.86em; }
+    th, td { padding: 0.5em 0.7em; border-bottom: 1px solid #334155; text-align: left; }
+    th { background: #1e293b; color: #38bdf8; }
     .box {
+      width: 100%;
       background: #1e293b;
       border-left: 5px solid #38bdf8;
-      padding: 0.75em 1.1em;
+      padding: 0.8em 1.15em;
       border-radius: 8px;
-      font-size: 0.88em;
-      margin-top: 0.6em;
+      margin-top: 0.55em;
     }
-    .warn {
-      border-left-color: #f59e0b;
-      background: #1f1b16;
+    .warn { border-left-color: #f59e0b; background: #1f1b16; }
+    .small { font-size: 0.78em; color: #94a3b8; }
+    .slide img.hero {
+      max-width: 72vw;
+      max-height: 36vh;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid #334155;
+      margin: 0.6em auto;
+      display: block;
     }
-    .small {
-      font-size: 0.75em;
-      color: #94a3b8;
+    .slide img.diagram {
+      width: 100%;
+      max-height: 62vh;
+      object-fit: contain;
+      border-radius: 10px;
+      border: 1px solid #334155;
+      background: #0b1120;
     }
+    .controls {
+      position: fixed;
+      bottom: 1.5vh;
+      right: 2vw;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid #334155;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      z-index: 100;
+    }
+    .controls button, .controls a {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 0.25rem 0.65rem;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .controls button:hover, .controls a:hover { background: #334155; }
   </style>
 </head>
 <body>
-  <div class="reveal">
-    <div class="slides">
+  <img class="brand-logo" src="../assets/images/logo-ies-sa-colomina-dark.jpg" alt="IES Sa Colomina">
 
-      <section class="center-slide">
-        <p class="small">Alijó IT Workshops · Workshop 1 (W1)</p>
-        <h1>IT Troubleshooting Challenge</h1>
-        <h3>Diagnóstico estructurado, intervención controlada y verificación en Linux</h3>
-        <p class="small">Turno A (13:20 – 15:05) · Turno B (15:15 – 17:00) · Grupos A1–A6 / B1–B6</p>
-      </section>
+  <div class="deck">
 
-      <section>
-        <h2>Objetivos de Aprendizaje</h2>
-        <ul>
-          <li>Aplicar una metodología repetible en lugar de adivinar.</li>
-          <li>Separar <strong>síntomas</strong> observados de la <strong>causa raíz</strong>.</li>
-          <li>Usar comandos de diagnóstico en una VM <strong>Ubuntu Desktop</strong>.</li>
-          <li>Aplicar correcciones seguras (un cambio controlado cada vez) y verificar el resultado.</li>
-          <li>Documentar evidencias reales en el informe técnico y en GitHub.</li>
-        </ul>
-      </section>
+    <section class="slide center active">
+      <p class="small">IES Sa Colomina · Alijó IT Workshops · Workshop 1 (W1)</p>
+      <h1>IT Troubleshooting Challenge</h1>
+      <h3>Diagnóstico estructurado, intervención controlada y verificación en Linux</h3>
+      <img class="hero" src="../assets/images/cover-w1.jpg" alt="Portada Workshop 1">
+      <p class="small">Turno A (13:20 – 15:05) · Turno B (15:15 – 17:00) · Grupos A1–A6 / B1–B6</p>
+    </section>
 
-      <section>
-        <h2>Organización del Equipo (4–5 personas)</h2>
-        <table>
-          <thead>
-            <tr><th>Rol</th><th>Responsabilidad Principal</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>Team Coordinator</strong></td><td>Gestiona tiempos, lee el incidente y valida decisiones del equipo.</td></tr>
-            <tr><td><strong>Lead Technician</strong></td><td>Ejecuta comandos y aplica cambios aprobados <em>(rotar en cada incidente)</em>.</td></tr>
-            <tr><td><strong>Evidence Recorder</strong></td><td>Registra síntomas, comandos, salidas exactas y marcas de tiempo.</td></tr>
-            <tr><td><strong>Verifier / Tester</strong></td><td>Define y ejecuta pruebas objetivas antes y después del cambio.</td></tr>
-            <tr><td><strong>Reporter</strong></td><td>Prepara la exposición final (en grupos de 4, se une al Coordinator).</td></tr>
-          </tbody>
-        </table>
-      </section>
+    <section class="slide">
+      <h2>Objetivos de Aprendizaje</h2>
+      <ul>
+        <li>Aplicar una metodología repetible en lugar de adivinar.</li>
+        <li>Separar <strong>síntomas</strong> observados de la <strong>causa raíz</strong>.</li>
+        <li>Usar comandos de diagnóstico en una VM <strong>Ubuntu Desktop</strong>.</li>
+        <li>Aplicar correcciones seguras (un cambio controlado cada vez) y verificar el resultado.</li>
+        <li>Documentar evidencias reales en el informe técnico y en GitHub.</li>
+      </ul>
+    </section>
 
-      <section>
-        <h2>Metodología de Resolución (7 Pasos)</h2>
+    <section class="slide">
+      <h2>Organización del Equipo (4–5 personas)</h2>
+      <table>
+        <thead>
+          <tr><th>Rol</th><th>Responsabilidad Principal</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Team Coordinator</strong></td><td>Gestiona tiempos, lee el incidente y valida decisiones del equipo.</td></tr>
+          <tr><td><strong>Lead Technician</strong></td><td>Ejecuta comandos y aplica cambios aprobados <em>(rotar en cada incidente)</em>.</td></tr>
+          <tr><td><strong>Evidence Recorder</strong></td><td>Registra síntomas, comandos, salidas exactas y marcas de tiempo.</td></tr>
+          <tr><td><strong>Verifier / Tester</strong></td><td>Define y ejecuta pruebas objetivas antes y después del cambio.</td></tr>
+          <tr><td><strong>Reporter</strong></td><td>Prepara la exposición final (en grupos de 4, se une al Coordinator).</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="slide">
+      <h2>Metodología de Resolución (7 Pasos)</h2>
+      <div class="two-col">
         <ol>
-          <li><strong>Identify:</strong> Comprender qué falla, a quién afecta y cuándo empezó.</li>
+          <li><strong>Identify:</strong> Comprender qué falla y a quién afecta.</li>
           <li><strong>Gather Evidence:</strong> Recopilar hechos y logs <em>antes</em> de tocar nada.</li>
-          <li><strong>Form a Hypothesis:</strong> Formular la causa más probable basada en evidencias.</li>
+          <li><strong>Form a Hypothesis:</strong> Formular la causa más probable.</li>
           <li><strong>Test the Hypothesis:</strong> Realizar una prueba de bajo riesgo.</li>
           <li><strong>Implement a Fix:</strong> Aplicar un único cambio reversible y aprobado.</li>
-          <li><strong>Verify:</strong> Repetir la prueba original y comprobar que nada más se rompió.</li>
-          <li><strong>Document:</strong> Registrar causa raíz, solución y evidencias verificables.</li>
+          <li><strong>Verify:</strong> Repetir la prueba original y comprobar el sistema.</li>
+          <li><strong>Document:</strong> Registrar causa raíz, solución y evidencias.</li>
         </ol>
-      </section>
+        <img class="diagram" src="../assets/images/diagram-7-steps.jpg" alt="Diagrama de los 7 pasos de troubleshooting">
+      </div>
+    </section>
 
-      <section>
-        <h2>Fase Inicial: Toma de Línea Base (Baseline)</h2>
-        <p>Antes de resolver incidentes, verificad el snapshot <code>BASELINE – BEFORE WORKSHOP</code> y registrad el estado inicial:</p>
-        <pre><code class="language-bash">whoami ; hostname
+    <section class="slide">
+      <h2>Fase Inicial: Toma de Línea Base (Baseline)</h2>
+      <p>Antes de resolver incidentes, verificad el snapshot <code>BASELINE – BEFORE WORKSHOP</code> y registrad el estado inicial:</p>
+      <pre><code>whoami ; hostname
 ip address
 ip route
 resolvectl status
 ping -c 4 1.1.1.1
 getent hosts example.com</code></pre>
-        <div class="box warn">
-          <strong>Regla de Seguridad:</strong> Todo el trabajo se realiza dentro de la VM aislada. Pedid aprobación al profesor antes de usar <code>sudo</code>.
-        </div>
-      </section>
+      <div class="box warn">
+        <strong>Regla de Seguridad:</strong> Todo el trabajo se realiza dentro de la VM aislada. Pedid aprobación al profesor antes de usar <code>sudo</code>.
+      </div>
+    </section>
 
-      <section>
-        <h2>Comandos Clave de Diagnóstico</h2>
-        <table>
-          <thead>
-            <tr><th>Propósito</th><th>Comando Ubuntu</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Interfaces e IP / Rutas</td><td><code>ip address</code> · <code>ip route</code></td></tr>
-            <tr><td>Conectividad y DNS</td><td><code>ping -c 4 1.1.1.1</code> · <code>getent hosts example.com</code> · <code>resolvectl status</code></td></tr>
-            <tr><td>Servicios y puertos</td><td><code>systemctl status <servicio></code> · <code>ss -tulpn</code></td></tr>
-            <tr><td>Logs recientes</td><td><code>journalctl -u <servicio> -n 30 --no-pager</code></td></tr>
-            <tr><td>Permisos y espacio</td><td><code>ls -ld <ruta></code> · <code>ls -l <archivo></code> · <code>df -h</code></td></tr>
-            <tr><td>Procesos y binarios</td><td><code>ps aux</code> · <code>file <ruta></code></td></tr>
-          </tbody>
-        </table>
-      </section>
+    <section class="slide">
+      <h2>Comandos Clave de Diagnóstico</h2>
+      <table>
+        <thead>
+          <tr><th>Propósito</th><th>Comando Ubuntu</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Interfaces e IP / Rutas</td><td><code>ip address</code> · <code>ip route</code></td></tr>
+          <tr><td>Conectividad y DNS</td><td><code>ping -c 4 1.1.1.1</code> · <code>getent hosts example.com</code> · <code>resolvectl status</code></td></tr>
+          <tr><td>Servicios y puertos</td><td><code>systemctl status <servicio></code> · <code>ss -tulpn</code></td></tr>
+          <tr><td>Logs recientes</td><td><code>journalctl -u <servicio> -n 30 --no-pager</code></td></tr>
+          <tr><td>Permisos y espacio</td><td><code>ls -ld <ruta></code> · <code>ls -l <archivo></code> · <code>df -h</code></td></tr>
+          <tr><td>Procesos y binarios</td><td><code>ps aux</code> · <code>file <ruta></code></td></tr>
+        </tbody>
+      </table>
+    </section>
 
-      <section>
-        <h2>Incidentes del Taller 1 (Cards 01 – 05)</h2>
+    <section class="slide">
+      <h2>Incidentes del Taller 1 (Cards 01 – 05)</h2>
+      <ul>
+        <li><strong>Incidente 01 – Configuración IP incorrecta:</strong> Sin alcance en red local; revisar interfaz, máscara y puerta de enlace.</li>
+        <li><strong>Incidente 02 – Fallo de resolución DNS:</strong> Conectividad por IP funcional, pero falla la resolución de dominios.</li>
+        <li><strong>Incidente 03 – Servicio del sistema detenido:</strong> Servicio inactivo o fallido; analizar estado y logs antes de reiniciar.</li>
+        <li><strong>Incidente 04 – Permisos de archivo incorrectos:</strong> Acceso denegado en carpeta de laboratorio <em>(prohibido <code>chmod 777</code>)</em>.</li>
+        <li><strong>Incidente 05 – Aplicación no arranca:</strong> Error al iniciar script o programa; revisar permisos, ruta y logs.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Incidente Sorpresa (Card 06)</h2>
+      <div class="box">
+        <p>En la recta final de la sesión recibiréis el <strong>Incidente 06</strong> sin pistas previas del profesor.</p>
         <ul>
-          <li><strong>Incidente 01 – Configuración IP incorrecta:</strong> Sin alcance en red local; revisar interfaz, máscara y puerta de enlace.</li>
-          <li><strong>Incidente 02 – Fallo de resolución DNS:</strong> Conectividad por IP funcional, pero falla la resolución de dominios.</li>
-          <li><strong>Incidente 03 – Servicio del sistema detenido:</strong> Servicio inactivo o fallido; analizar estado y logs antes de reiniciar.</li>
-          <li><strong>Incidente 04 – Permisos de archivo incorrectos:</strong> Acceso denegado en carpeta de laboratorio <em>(prohibido <code>chmod 777</code>)</em>.</li>
-          <li><strong>Incidente 05 – Aplicación no arranca:</strong> Error al iniciar script o programa; revisar permisos, ruta y logs.</li>
+          <li>Aplicad estrictamente los 7 pasos de la metodología.</li>
+          <li>Documentad la hipótesis antes de ejecutar cualquier cambio.</li>
+          <li>No basta con decir <em>«ya funciona»</em>: adjuntad la salida real del comando de verificación.</li>
         </ul>
-      </section>
+      </div>
+    </section>
 
-      <section>
-        <h2>Incidente Sorpresa (Card 06)</h2>
-        <div class="box">
-          <p>En la recta final de la sesión recibiréis el <strong>Incidente 06</strong> sin pistas previas del profesor.</p>
-          <ul>
-            <li>Aplicad estrictamente los 7 pasos de la metodología.</li>
-            <li>Documentad la hipótesis antes de ejecutar cualquier cambio.</li>
-            <li>No basta con decir <em>«ya funciona»</em>: adjuntad la salida real del comando de verificación.</li>
-          </ul>
-        </div>
-      </section>
+    <section class="slide">
+      <h2>Entrega en GitHub y Evaluación Cruzada</h2>
+      <ol>
+        <li><strong>Validación previa:</strong> Abrid el Issue <strong>Tarea 0</strong> al iniciar la sesión.</li>
+        <li><strong>Entrega del Taller 1:</strong> Abrid un Issue con la plantilla <strong>Tarea 1</strong> (<code>[TAREA-1][Grupo-XX]</code>) pegando vuestras evidencias.</li>
+        <li><strong>Evaluación Automática (60%):</strong> El bot verifica estructura, comandos, evidencias y seguridad.</li>
+        <li><strong>Auditoría Peer-to-Peer (40%):</strong> En la Tarea 1, cada grupo evalúa al siguiente de su turno (<code>A1→A2</code>, <code>A2→A3</code>... <code>A6→A1</code>) comentando <code>PEER-SCORE: XX</code>.</li>
+      </ol>
+    </section>
 
-      <section>
-        <h2>Entrega en GitHub y Evaluación Cruzada</h2>
-        <ol>
-          <li><strong>Validación previa:</strong> Abrid el Issue <strong>Tarea 0</strong> al iniciar la sesión.</li>
-          <li><strong>Entrega del Taller 1:</strong> Abrid un Issue con la plantilla <strong>Tarea 1</strong> (<code>[TAREA-1][Grupo-XX]</code>) pegando vuestras evidencias.</li>
-          <li><strong>Evaluación Automática (60%):</strong> El bot verifica estructura, comandos, evidencias y seguridad.</li>
-          <li><strong>Auditoría Peer-to-Peer (40%):</strong> En la Tarea 1, cada grupo evalúa al siguiente de su turno (<code>A1→A2</code>, <code>A2→A3</code>... <code>A6→A1</code>) comentando <code>PEER-SCORE: XX</code>.</li>
-        </ol>
-      </section>
+    <section class="slide center">
+      <h2>¡Comenzamos!</h2>
+      <p>1. Iniciad la VM Ubuntu y verificad el snapshot <code>BASELINE – BEFORE WORKSHOP</code>.</p>
+      <p>2. Abrid vuestro Issue de <strong>Tarea 0</strong> en GitHub.</p>
+      <p>3. Asignad los roles del equipo y tomad la línea base.</p>
+      <p class="small">Controles: Flechas <code>←</code> <code>→</code> · <code>F11</code> Pantalla completa</p>
+    </section>
 
-      <section class="center-slide">
-        <h2>¡Comenzamos!</h2>
-        <p>1. Iniciad la VM Ubuntu y verificad el snapshot <code>BASELINE – BEFORE WORKSHOP</code>.</p>
-        <p>2. Abrid vuestro Issue de <strong>Tarea 0</strong> en GitHub.</p>
-        <p>3. Asignad los roles del equipo y tomad la línea base.</p>
-        <p class="small">Atajos: <code>F</code> Pantalla completa · <code>S</code> Vista de ponente · <code>ESC</code> Vista general</p>
-      </section>
-
-    </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+
+  <div class="controls">
+    <a href="../index.html" title="Índice">⌂</a>
+    <button onclick="go(-1)" title="Anterior">◀</button>
+    <span id="counter">1 / 10</span>
+    <button onclick="go(1)" title="Siguiente">▶</button>
+    <button onclick="toggleFull()" title="Pantalla completa">⛶</button>
+  </div>
+
   <script>
-    Reveal.initialize({
-      hash: true,
-      slideNumber: true,
-      transition: 'slide',
-      width: '100%',
-      height: '100%',
-      margin: 0,
-      minScale: 1,
-      maxScale: 1,
-      disableLayout: true,
-      plugins: [ RevealHighlight ]
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let idx = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.replace('#', ''), 10) || 1) - 1));
+    function render() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      document.getElementById('counter').textContent = `${idx + 1} / ${slides.length}`;
+      history.replaceState(null, '', `#${idx + 1}`);
+    }
+    function go(delta) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx + delta));
+      render();
+    }
+    function toggleFull() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+    document.addEventListener('keydown', e => {
+      if (['ArrowRight', 'PageDown', ' '].includes(e.key)) go(1);
+      if (['ArrowLeft', 'PageUp'].includes(e.key)) go(-1);
     });
+    render();
   </script>
 </body>
 </html>

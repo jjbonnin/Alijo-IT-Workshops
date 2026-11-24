@@ -3,46 +3,67 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alijó IT Workshops — Presentaciones</title>
+  <title>Alijó IT Workshops — IES Sa Colomina</title>
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 2rem; }
-    .container { max-width: 900px; margin: 0 auto; }
-    h1 { color: #38bdf8; margin-bottom: 0.25rem; }
-    p.subtitle { color: #94a3b8; margin-top: 0; margin-bottom: 2rem; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
-    .card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 1.5rem; text-decoration: none; color: inherit; transition: transform 0.15s, border-color 0.15s; }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .topbar img.logo { height: 56px; border-radius: 8px; border: 1px solid #334155; }
+    h1 { color: #38bdf8; margin: 0 0 0.2rem 0; }
+    p.subtitle { color: #94a3b8; margin: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; overflow: hidden; text-decoration: none; color: inherit; transition: transform 0.15s, border-color 0.15s; display: flex; flex-direction: column; }
     .card:hover { transform: translateY(-3px); border-color: #38bdf8; }
-    .badge { display: inline-block; background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.75rem; }
-    .card h2 { margin: 0 0 0.5rem 0; font-size: 1.2rem; color: #f1f5f9; }
-    .card p { margin: 0; font-size: 0.9rem; color: #cbd5e1; line-height: 1.45; }
+    .card img.cover { width: 100%; height: 135px; object-fit: cover; border-bottom: 1px solid #334155; }
+    .card-body { padding: 1.15rem; }
+    .badge { display: inline-block; background: #0284c7; color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.6rem; }
+    .card h2 { margin: 0 0 0.45rem 0; font-size: 1.15rem; color: #f1f5f9; }
+    .card p { margin: 0; font-size: 0.88rem; color: #cbd5e1; line-height: 1.45; }
     .footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #334155; font-size: 0.9rem; color: #94a3b8; }
     .footer a { color: #38bdf8; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Alijó IT Workshops</h1>
-    <p class="subtitle">Material de proyección en aula · Grupos A1–A6 y B1–B6</p>
+    <div class="topbar">
+      <div>
+        <h1>Alijó IT Workshops</h1>
+        <p class="subtitle">Material de proyección en aula · Grupos A1–A6 y B1–B6</p>
+      </div>
+      <img class="logo" src="./assets/images/logo-ies-sa-colomina-dark.jpg" alt="Logo IES Sa Colomina">
+    </div>
     <div class="grid">
       <a class="card" href="./slides/01-troubleshooting.html">
-        <span class="badge">TALLER 1 · W1</span>
-        <h2>IT Troubleshooting Challenge</h2>
-        <p>Metodología de diagnóstico en 7 pasos, línea base en Ubuntu, 6 incidentes prácticos y entrega en GitHub.</p>
+        <img class="cover" src="./assets/images/cover-w1.jpg" alt="Portada Taller 1">
+        <div class="card-body">
+          <span class="badge">TALLER 1 · W1</span>
+          <h2>IT Troubleshooting Challenge</h2>
+          <p>Metodología de diagnóstico en 7 pasos, línea base en Ubuntu, 6 incidentes prácticos y entrega en GitHub.</p>
+        </div>
       </a>
       <a class="card" href="./slides/02-ai-assistant.html">
-        <span class="badge">TALLER 2 · W2</span>
-        <h2>AI IT Technician Assistant</h2>
-        <p>Diagnóstico asistido por IA, scripts en Python y validación crítica (Trust or Verify).</p>
+        <img class="cover" src="./assets/images/cover-w2.jpg" alt="Portada Taller 2">
+        <div class="card-body">
+          <span class="badge">TALLER 2 · W2</span>
+          <h2>AI IT Technician Assistant</h2>
+          <p>Diagnóstico asistido por IA, scripts en Python y validación crítica (Trust or Verify).</p>
+        </div>
       </a>
       <a class="card" href="./slides/03-networking.html">
-        <span class="badge">TALLER 3 · W3</span>
-        <h2>Build & Configure Network</h2>
-        <p>Infraestructura de red física vs. simulada, direccionamiento IP, enrutamiento y conectividad.</p>
+        <img class="cover" src="./assets/images/cover-w3.jpg" alt="Portada Taller 3">
+        <div class="card-body">
+          <span class="badge">TALLER 3 · W3</span>
+          <h2>Build & Configure Network</h2>
+          <p>Infraestructura de red física vs. simulada, direccionamiento IP, enrutamiento y conectividad.</p>
+        </div>
       </a>
       <a class="card" href="./slides/04-linux-server.html">
-        <span class="badge">TALLER 4 · W4</span>
-        <h2>Linux Server Administration</h2>
-        <p>Servicios systemd, firewall UFW, permisos, monitorización y automatización en servidor Linux.</p>
+        <img class="cover" src="./assets/images/cover-w4.jpg" alt="Portada Taller 4">
+        <div class="card-body">
+          <span class="badge">TALLER 4 · W4</span>
+          <h2>Linux Server Administration</h2>
+          <p>Servicios systemd, firewall UFW, permisos, monitorización y automatización en servidor Linux.</p>
+        </div>
       </a>
     </div>
     <div class="footer">
