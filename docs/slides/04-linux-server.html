@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop 4: Linux Server Administration — Alijó IT Workshops</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .slide-header {
+      position: fixed;
+      top: 1.8vh;
+      left: 2.2vw;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid #1e293b;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      z-index: 95;
+      pointer-events: none;
+    }
+    .brand-logo {
+      position: fixed;
+      top: 22px;
+      right: 28px;
+      width: 110px;
+      height: 75px;
+      object-fit: contain;
+      opacity: 0.85;
+      z-index: 95;
+      pointer-events: none;
+    }
+    .slide-footer {
+      position: fixed;
+      bottom: 1.8vh;
+      left: 2.2vw;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid #1e293b;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      z-index: 95;
+      pointer-events: none;
+    }
+    .deck { width: 100vw; height: 100vh; position: relative; }
+    .slide {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      padding: 8vh 5vw 8.5vh 5vw;
+      flex-direction: column;
+      justify-content: center;
+      font-size: clamp(15px, 1.42vw, 23px);
+      line-height: 1.38;
+    }
+    .slide.active { display: flex; }
+    .slide.center { text-align: center; align-items: center; }
+    .slide.cover-bg, .slide.layers-bg {
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+    }
+    .slide.cover-bg {
+      background-image: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.82)),
+                        url("../assets/images/cover-w4.jpg");
+    }
+    .slide.layers-bg {
+      background-image: linear-gradient(rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.82)),
+                        url("../assets/images/diagram-5-layers.jpg");
+    }
+    .slide.cover-bg pre, .slide.layers-bg pre {
+      background: rgba(9, 13, 22, 0.92);
+    }
+    h1 { font-size: clamp(2.1rem, 3.5vw, 3.5rem); color: #38bdf8; margin-bottom: 0.35em; }
+    h2 {
+      font-size: clamp(1.32rem, 2.2vw, 2.1rem);
+      color: #38bdf8;
+      border-bottom: 2px solid #1e293b;
+      padding-bottom: 0.2em;
+      margin-bottom: 0.5em;
+      width: 100%;
+    }
+    h3 { font-size: clamp(1.02rem, 1.55vw, 1.45rem); color: #e2e8f0; font-weight: 600; margin-bottom: 0.4em; }
+    p { margin-bottom: 0.4em; }
+    ul, ol { margin-left: 1.35em; width: 100%; }
+    li { margin-bottom: 0.32em; }
+    code {
+      background: #1e293b;
+      color: #7dd3fc;
+      padding: 0.08em 0.32em;
+      border-radius: 5px;
+      font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.88em;
+    }
+    pre {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid #334155;
+      border-left: 5px solid #38bdf8;
+      border-radius: 8px;
+      padding: 0.65em 0.95em;
+      margin: 0.35em 0;
+      overflow: auto;
+    }
+    pre code {
+      background: transparent;
+      color: #f8fafc;
+      padding: 0;
+      font-size: clamp(0.76rem, 1.02vw, 0.98rem);
+      line-height: 1.38;
+      display: block;
+      white-space: pre;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82em; margin-top: 0.35em; }
+    th, td { padding: 0.38em 0.6em; border-bottom: 1px solid #334155; text-align: left; }
+    th { background: #1e293b; color: #38bdf8; }
+    .speaker-grid {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 2rem;
+      align-items: center;
+      width: 100%;
+    }
+    .speaker-photo {
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #38bdf8;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+      justify-self: center;
+    }
+    .box {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.9);
+      border-left: 5px solid #38bdf8;
+      padding: 0.65em 1em;
+      border-radius: 8px;
+      margin-top: 0.45em;
+    }
+    .small { font-size: 0.78em; color: #cbd5e1; }
+    aside.notes { display: none; }
+    .controls {
+      position: fixed;
+      bottom: 1.5vh;
+      right: 2vw;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid #334155;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      z-index: 100;
+    }
+    .controls button, .controls a {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 0.25rem 0.65rem;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .controls button:hover, .controls a:hover { background: #334155; }
+  </style>
+</head>
+<body>
+  <header class="slide-header">Alijó IT Workshops | Workshop 4: Linux Server Administration</header>
+  <img class="brand-logo" src="../assets/images/logo-ies-sa-colomina-dark.jpg" alt="IES Sa Colomina">
+
+  <div class="deck">
+
+    <!-- Portada -->
+    <section class="slide center cover-bg active">
+      <h1>Workshop 4: Linux Server Administration</h1>
+      <h3 style="font-weight:400;">System Administration and Troubleshooting</h3>
+      <p><strong>Agrupamento de Escolas D. Sancho II, Alijó</strong></p>
+      <p><em>Ponente: Juan José Bonnín Sansó (IES Sa Colomina)</em></p>
+      <p class="small" style="margin-top: 1.2em;">Controles: Flechas <code>←</code> <code>→</code> · <code>S</code> Vista del orador · <code>F11</code> Pantalla completa</p>
+      <aside class="notes">
+        <strong>Notas del orador (00–05 min):</strong><br>
+        • Presenta el salto de este taller: pasamos de un entorno de escritorio a administrar un servidor Linux en producción (<code>alijo-srv01</code>) exclusivamente desde la línea de comandos.
+      </aside>
+    </section>
+
+    <!-- Slide 1 -->
+    <section class="slide">
+      <h2>1. Mission & Learning Outcomes</h2>
+      <p>By the end of this 3-hour workshop, your team will be able to:</p>
+      <ol>
+        <li><strong>Inspect server baseline metrics</strong> (CPU, RAM, disk, network, listening sockets) from the CLI.</li>
+        <li><strong>Provision users and groups</strong> safely (<code>usermod -aG</code>) and enforce least-privilege POSIX permissions (<code>750</code>, <code>640</code>, <code>644</code>).</li>
+        <li><strong>Administer <code>systemd</code> daemons</strong> (<code>apache2</code>, <code>ssh</code>) with syntax validation before reload.</li>
+        <li><strong>Harden host network access</strong> with <code>ufw</code> (<code>default deny incoming</code>) without locking out SSH.</li>
+        <li><strong>Automate health checks</strong> in Bash (<code>server_report.sh</code> + <code>cron</code>) and resolve multi-layer outages (<code>INC-401</code>).</li>
+      </ol>
+      <aside class="notes">
+        <strong>Notas del orador (05–10 min):</strong><br>
+        • Recalca que en producción cada cambio de configuración se valida antes de recargar el servicio para evitar caídas innecesarias.
+      </aside>
+    </section>
+
+    <!-- Slide 2 -->
+    <section class="slide">
+      <h2>2. Three-Hour Session Roadmap (180 Min)</h2>
+      <table>
+        <thead>
+          <tr><th>Block</th><th>Duration</th><th>Activity</th><th>Team Deliverable</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1</strong></td><td>30 min</td><td>Briefing, safety rules & server baseline inspection</td><td><code>Server-Baseline-Record.md</code></td></tr>
+          <tr><td><strong>2</strong></td><td>35 min</td><td>Users, groups (<code>webadmins</code>, <code>auditors</code>) & POSIX permissions</td><td><code>Users-Groups-and-Permissions-Record.md</code></td></tr>
+          <tr><td><strong>3</strong></td><td>35 min</td><td><code>systemd</code> lifecycle & <code>ufw</code> host firewall hardening</td><td><code>Service-Management-Record.md</code></td></tr>
+          <tr><td><strong>4</strong></td><td>30 min</td><td>Bash health script (<code>server_report.sh</code>) & <code>cron</code> scheduling</td><td><code>Bash-Script-Record.md</code></td></tr>
+          <tr><td><strong>5</strong></td><td>15 min</td><td><em>Break + Instructor fault injection (<code>INC-401</code>)</em></td><td>—</td></tr>
+          <tr><td><strong>6</strong></td><td>35 min</td><td><strong>Final Management Challenge (<code>INC-401</code>)</strong> & debrief</td><td><code>HTTP 200 OK</code> + <code>Incident-Report.md</code></td></tr>
+        </tbody>
+      </table>
+      <aside class="notes">
+        <strong>Notas del orador (10–12 min):</strong><br>
+        • Confirma que todos tienen creado el snapshot limpio <code>BASELINE - CLEAN UBUNTU SERVER</code> antes de empezar.
+      </aside>
+    </section>
+
+    <!-- Slide 3 -->
+    <section class="slide">
+      <h2>3. Non-Negotiable Server Ops Safety Rules</h2>
+      <ol>
+        <li><strong>Never Log In Directly as <code>root</code>:</strong> Work as <code>sysadmin</code> and elevate privilege explicitly with <code>sudo</code>.</li>
+        <li><strong>Never Use <code>chmod 777</code> (or <code>666</code>):</strong> World-writable files or <code>.env</code> secrets incur automatic rubric penalties (<code>-10 pts</code>).</li>
+        <li><strong>Never Run <code>ufw disable</code> to Troubleshoot:</strong> Open only required ports (<code>22/tcp</code>, <code>80/tcp</code>) while keeping default-deny active (<code>-10 pts</code> penalty if disabled).</li>
+        <li><strong>Anti-Lockout Order:</strong> Always run <code>sudo ufw allow 22/tcp</code> <strong>before</strong> enabling <code>ufw</code>.</li>
+        <li><strong>Validate Before Reload:</strong> Run <code>sudo apache2ctl configtest</code> (<code>Syntax OK</code>) before <code>sudo systemctl reload apache2</code>.</li>
+      </ol>
+      <aside class="notes">
+        <strong>Notas del orador (12–15 min):</strong><br>
+        • Deja muy claro desde el minuto 1 que usar <code>chmod 777</code> o <code>ufw disable</code> invalida la solución aunque la página web cargue.
+      </aside>
+    </section>
+
+    <!-- Slide 4 -->
+    <section class="slide">
+      <h2>4. Module 1: Server Baseline & Filesystem Hierarchy</h2>
+      <p>Know where critical server files live and how to inspect system health:</p>
+      <table>
+        <thead>
+          <tr><th>Directory</th><th>Purpose</th><th>Key Inspection Commands</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>/etc/</code></td><td>System & service configuration files (<code>ssh</code>, <code>apache2</code>, <code>ufw</code>)</td><td><code>hostnamectl</code>, <code>cat /etc/os-release</code></td></tr>
+          <tr><td><code>/var/log/</code></td><td>System journals, auth logs, Apache access/error logs</td><td><code>journalctl -xe</code>, <code>tail -n 30 /var/log/apache2/error.log</code></td></tr>
+          <tr><td><code>/var/www/html/</code></td><td>Default public Apache web root (<code>status.html</code>)</td><td><code>ls -la /var/www/html/</code></td></tr>
+          <tr><td><code>/srv/</code></td><td>Site-specific application data (<code>/srv/alijo-portal</code>)</td><td><code>ls -la /srv/alijo-portal/</code></td></tr>
+          <tr><td><strong>Network & Load</strong></td><td>Interfaces, routes, RAM, disk, and open sockets</td><td><code>ip -br -4 addr</code>, <code>free -h</code>, <code>df -h</code>, <code>sudo ss -tulpn</code></td></tr>
+        </tbody>
+      </table>
+      <aside class="notes">
+        <strong>Notas del orador (15–30 min):</strong><br>
+        • Guía a los equipos mientras completan <code>Worksheets/Server-Baseline-Record.md</code> con los valores iniciales de su VM.
+      </aside>
+    </section>
+
+    <!-- Slide 5 -->
+    <section class="slide">
+      <h2>5. Module 2: Users, Groups & Least-Privilege Permissions</h2>
+      <h3>Safe Group Membership</h3>
+      <pre><code>sudo groupadd -f webadmins
+sudo groupadd -f auditors
+sudo usermod -aG webadmins dev_ana     # ALWAYS use -aG (append), never -G alone!
+sudo usermod -aG auditors audit_rui</code></pre>
+      <h3 style="margin-top:0.5em;">Target Permission Matrix (<code>/srv/alijo-portal</code>)</h3>
+      <table>
+        <thead>
+          <tr><th>Path</th><th>Owner:Group</th><th>Mode</th><th>Symbolic</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>/srv/alijo-portal</code></td><td><code>root:webadmins</code></td><td><code>750</code></td><td><code>drwxr-x---</code></td><td><code>x</code> allows traversal (<code>cd</code>) for <code>root</code> & <code>webadmins</code> only</td></tr>
+          <tr><td><code>/srv/alijo-portal/index.html</code></td><td><code>root:webadmins</code></td><td><code>644</code></td><td><code>-rw-r--r--</code></td><td>Publicly readable web asset, writable only by <code>root</code></td></tr>
+          <tr><td><code>/srv/alijo-portal/.env</code></td><td><code>root:webadmins</code></td><td><code>640</code></td><td><code>-rw-r-----</code></td><td>Secrets readable by <code>webadmins</code>, zero access for <code>other</code></td></tr>
+        </tbody>
+      </table>
+      <aside class="notes">
+        <strong>Notas del orador (30–65 min):</strong><br>
+        • Explica por qué el bit <code>x</code> en un directorio significa permiso de paso (<code>cd</code>), mientras que <code>r</code> permite listar nombres (<code>ls</code>).
+      </aside>
+    </section>
+
+    <!-- Slide 6 -->
+    <section class="slide">
+      <h2>6. Module 3: <code>systemd</code> Service Lifecycle</h2>
+      <p>Manage background daemons cleanly without dropping active user sessions:</p>
+      <pre><code># 1. Inspect current state & boot enablement
+systemctl status apache2
+systemctl is-enabled apache2
+
+# 2. Start now AND enable automatically at boot
+sudo systemctl enable --now apache2
+
+# 3. Validate syntax BEFORE applying config changes
+sudo apache2ctl configtest          # Must return: Syntax OK
+sudo systemctl reload apache2       # Graceful reload (zero dropped connections)</code></pre>
+      <div class="box">
+        <strong><code>reload</code> vs. <code>restart</code>:</strong> <code>reload</code> re-reads configuration gracefully; <code>restart</code> kills all worker processes and drops active HTTP connections.
+      </div>
+      <aside class="notes">
+        <strong>Notas del orador (65–85 min):</strong><br>
+        • Haz énfasis en la diferencia práctica entre <code>reload</code> y <code>restart</code>, ya que es una pregunta directa en su hoja de trabajo.
+      </aside>
+    </section>
+
+    <!-- Slide 7 -->
+    <section class="slide">
+      <h2>7. Module 4: Host Firewall Hardening (<code>ufw</code>)</h2>
+      <p>Enforce a <strong>default-deny incoming</strong> posture while preserving SSH and HTTP access:</p>
+      <pre><code># 1. Set baseline policies
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# 2. Allow SSH FIRST (anti-lockout!), then HTTP
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+
+# 3. Enable and audit numbered rules
+sudo ufw --force enable
+sudo ufw status numbered</code></pre>
+      <aside class="notes">
+        <strong>Notas del orador (85–100 min):</strong><br>
+        • Revisa visualmente en las mesas que <code>22/tcp</code> está permitido y que no queda ningún puerto innecesario abierto.
+      </aside>
+    </section>
+
+    <!-- Slide 8 -->
+    <section class="slide">
+      <h2>8. Module 5: Bash Automation & <code>cron</code> (<code>server_report.sh</code>)</h2>
+      <p>Automate daily server health reporting with strict error handling and exit codes:</p>
+      <pre><code>#!/usr/bin/env bash
+set -u
+
+echo "=== Alijo Server Health Report ($(date -Iseconds)) ==="
+echo "Host: $(hostname) | Uptime: $(uptime -p)"
+df -h /
+free -h
+systemctl is-active apache2 ssh</code></pre>
+      <h3 style="margin-top:0.5em;">Execution & Daily <code>07:30</code> Schedule (<code>crontab -e</code>)</h3>
+      <pre><code>chmod 750 Scripts/server_report.sh
+./Scripts/server_report.sh && echo "Exit code: $?"
+
+# Crontab entry (runs every day at 07:30):
+30 7 * * * /home/sysadmin/Alijo-IT-Workshops/Workshop-4-Linux-Server-Administration/Scripts/server_report.sh >> /var/log/server_health.log 2>&1</code></pre>
+      <aside class="notes">
+        <strong>Notas del orador (100–130 min):</strong><br>
+        • Pide a los equipos que añadan una comprobación personalizada (por ejemplo, carga de CPU o estado de <code>ufw</code>) y verifiquen que <code>echo $?</code> devuelve <code>0</code>.
+      </aside>
+    </section>
+
+    <!-- Slide 9 (con diagrama diagram-5-layers.jpg disimulado de fondo) -->
+    <section class="slide layers-bg">
+      <h2>9. Module 6: 5-Layer Troubleshooting Stack</h2>
+      <p>When an outage hits <code>alijo-srv01</code>, diagnose systematically from bottom to top:</p>
+      <pre><code>[Layer 5: File Ownership & Permissions] ──▶ ls -la /var/www/html /srv/alijo-portal
+[Layer 4: Host Firewall (`ufw`)]        ──▶ sudo ufw status numbered
+[Layer 3: Listening Sockets]            ──▶ sudo ss -tulpn
+[Layer 2: Daemon & Logs (`systemd`)]    ──▶ systemctl status apache2 | journalctl -xe
+[Layer 1: Host Resources]               ──▶ df -h | free -h</code></pre>
+      <ul>
+        <li><strong><code>Connection refused</code> on <code>:80</code></strong> ➔ Service stopped (Layer 2/3).</li>
+        <li><strong><code>Connection timed out</code> on <code>:80</code></strong> ➔ Firewall dropping packets (Layer 4).</li>
+        <li><strong><code>HTTP/1.1 403 Forbidden</code></strong> ➔ File ownership or <code>600</code> permissions blocking <code>www-data</code> (Layer 5).</li>
+      </ul>
+      <aside class="notes">
+        <strong>Notas del orador (130–145 min):</strong><br>
+        • Proyecta esta diapositiva justo antes de iniciar el Reto Final <code>INC-401</code> como mapa de diagnóstico.
+      </aside>
+    </section>
+
+    <!-- Slide 10 -->
+    <section class="slide">
+      <h2>10. Final Management Challenge Briefing (<code>INC-401</code>)</h2>
+      <h3>Incident Scenario</h3>
+      <p>Following scheduled maintenance on <code>alijo-srv01</code>, monitoring reports a multi-layer outage:</p>
+      <ul>
+        <li><code>http://<SERVER_IP>/status.html</code> is unreachable externally.</li>
+        <li>Security audit flags drifted permissions on <code>/srv/alijo-portal/.env</code> and legacy firewall rules.</li>
+        <li>The daily monitoring script <code>Scripts/server_report.sh</code> fails to execute.</li>
+      </ul>
+      <h3 style="margin-top:0.55em;">Acceptance Criteria & Grading (100 Points)</h3>
+      <ol>
+        <li><code>curl -i http://<SERVER_IP>/status.html</code> returns <strong><code>HTTP/1.1 200 OK</code></strong> (<code>Alijo Status: Operational</code>).</li>
+        <li><code>/srv/alijo-portal/.env</code> hardened to <strong><code>640</code> (<code>root:webadmins</code>)</strong>; <code>/var/www/html/status.html</code> set to <strong><code>644</code> (<code>root:www-data</code>)</strong>.</li>
+        <li><code>ufw</code> active with <strong><code>23/tcp</code> removed</strong> and <strong><code>80/tcp</code> allowed</strong>.</li>
+        <li><code>Scripts/server_report.sh</code> executable (<code>750</code>) and <code>Worksheets/Incident-Report.md</code> completed with before/after evidence.</li>
+      </ol>
+      <aside class="notes">
+        <strong>Notas del orador (145–180 min):</strong><br>
+        • Al finalizar y recoger los informes, recuerda a todos restaurar el snapshot <code>BASELINE - CLEAN UBUNTU SERVER</code>.
+      </aside>
+    </section>
+
+    <!-- About the Speaker -->
+    <section class="slide">
+      <h2>About the Speaker | Juan José Bonnín Sansó</h2>
+      <div class="speaker-grid">
+        <div>
+          <p><strong>IT & Vocational Education Teacher (SMX / ASIX) — IES Sa Colomina (Eivissa)</strong></p>
+          <ul>
+            <li><strong>Engineering & Teaching Background:</strong> Engineer and Computer Science / ICT educator since 2015, specialising in Network Services (<em>Serveis en Xarxa</em>), Operating Systems, Markup Languages, and Database Administration.</li>
+            <li><strong>E-Learning & Digital Coordination:</strong> Master's in Education & ICT (UOC), former ICT Coordinator, Google Workspace for Education trainer, and co-founder of <em>TIC Natur – Solucions Formatives</em>.</li>
+            <li><strong>Beyond the Classroom:</strong> Regional basketball referee (CBAB) since 1985, National Volleyball Referee (<strong>NIII-C</strong>), and licensed coastal skipper.</li>
+          </ul>
+          <div class="box">
+            <strong>Contact & Links:</strong><br>
+            • <strong>Email:</strong> <a href="mailto:jjbonninsanso@educaib.eu" style="color:#38bdf8;">jjbonninsanso@educaib.eu</a><br>
+            • <strong>Web Profile:</strong> <a href="https://about.me/jbonnins" target="_blank" style="color:#38bdf8;">https://about.me/jbonnins</a><br>
+            • <strong>Host Institution:</strong> Agrupamento de Escolas D. Sancho II, Alijó (Portugal)
+          </div>
+        </div>
+        <img class="speaker-photo" src="../assets/images/speaker-jbonnin.jpg" alt="Juan José Bonnín Sansó">
+      </div>
+      <aside class="notes">
+        <strong>Notas del orador (Cierre):</strong><br>
+        • Agradece la acogida al Agrupamento de Escolas D. Sancho II (Alijó) y deja proyectados tus datos de contacto y el perfil about.me/jbonnins para futuras colaboraciones.
+      </aside>
+    </section>
+
+  </div>
+
+  <footer class="slide-footer">System Administration and Troubleshooting</footer>
+
+  <div class="controls">
+    <a href="../index.html" title="Índice">⌂</a>
+    <button onclick="go(-1)" title="Anterior (←)">◀</button>
+    <span id="counter">1 / 12</span>
+    <button onclick="go(1)" title="Siguiente (→)">▶</button>
+    <button onclick="openSpeakerView()" title="Vista del Orador (S)">🎤 Orador</button>
+    <button onclick="toggleFull()" title="Pantalla completa">⛶</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const channel = ('BroadcastChannel' in window) ? new BroadcastChannel('alijo-w4-deck') : null;
+    let speakerWin = null;
+    let idx = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.replace('#', ''), 10) || 1) - 1));
+
+    function getSlideTitle(slideEl, i) {
+      const h = slideEl.querySelector('h1, h2');
+      return h ? h.textContent.trim() : `Slide ${i + 1}`;
+    }
+
+    function getSlideNotes(slideEl) {
+      const aside = slideEl.querySelector('aside.notes');
+      return aside ? aside.innerHTML.trim() : '<em>Sin notas adicionales para esta diapositiva.</em>';
+    }
+
+    function syncSpeakerView() {
+      if (!speakerWin || speakerWin.closed) return;
+      const doc = speakerWin.document;
+      const curTitle = doc.getElementById('sp-cur-title');
+      if (!curTitle) return;
+      curTitle.textContent = `${idx + 1} / ${slides.length} — ${getSlideTitle(slides[idx], idx)}`;
+      doc.getElementById('sp-cur-body').innerHTML = slides[idx].innerHTML;
+      doc.getElementById('sp-notes').innerHTML = getSlideNotes(slides[idx]);
+      if (idx + 1 < slides.length) {
+        doc.getElementById('sp-next-title').textContent = `Siguiente (${idx + 2}/${slides.length}): ${getSlideTitle(slides[idx + 1], idx + 1)}`;
+        doc.getElementById('sp-next-body').innerHTML = slides[idx + 1].innerHTML;
+      } else {
+        doc.getElementById('sp-next-title').textContent = 'Fin de la presentación';
+        doc.getElementById('sp-next-body').innerHTML = '<p style="color:#94a3b8">Última diapositiva alcanzada.</p>';
+      }
+    }
+
+    function render(broadcast = true) {
+      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      document.getElementById('counter').textContent = `${idx + 1} / ${slides.length}`;
+      history.replaceState(null, '', `#${idx + 1}`);
+      localStorage.setItem('alijo-w4-slide', String(idx));
+      if (broadcast && channel) channel.postMessage({ type: 'goto', idx });
+      syncSpeakerView();
+    }
+
+    function go(delta) {
+      idx = Math.max(0, Math.min(slides.length - 1, idx + delta));
+      render(true);
+    }
+
+    function toggleFull() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+
+    function openSpeakerView() {
+      if (speakerWin && !speakerWin.closed) {
+        speakerWin.focus();
+        syncSpeakerView();
+        return;
+      }
+      speakerWin = window.open('', 'AlijoSpeakerViewW4', 'width=1100,height=720');
+      if (!speakerWin) {
+        alert('El navegador bloqueó la ventana emergente. Permite pop-ups para este sitio o pulsa "🎤 Orador".');
+        return;
+      }
+      speakerWin.document.write(`<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Vista del Orador — Workshop 4</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #090d16; color: #f8fafc; font-family: system-ui, sans-serif; height: 100vh; display: grid; grid-template-rows: 54px 1fr; }
+    header { background: #1e293b; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; padding: 0 1.2rem; }
+    .timer { font-family: monospace; font-size: 1.35rem; color: #38bdf8; font-weight: 700; }
+    button { background: #0f172a; color: #38bdf8; border: 1px solid #334155; border-radius: 6px; padding: 0.35rem 0.75rem; cursor: pointer; font-weight: 700; margin-left: 0.4rem; }
+    button:hover { background: #334155; }
+    main { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1rem; padding: 1rem; overflow: hidden; }
+    .col { display: flex; flex-direction: column; gap: 1rem; overflow: hidden; }
+    .panel { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 0.9rem; overflow-y: auto; }
+    .panel h4 { color: #38bdf8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.6rem; border-bottom: 1px solid #1e293b; padding-bottom: 0.3rem; }
+    .preview { font-size: 0.82rem; line-height: 1.35; }
+    .preview img { max-width: 100%; max-height: 140px; object-fit: contain; margin-top: 0.4rem; }
+    .preview aside.notes { display: none; }
+    .preview pre { background: #090d16; padding: 0.5rem; border-radius: 6px; margin-top: 0.4rem; font-size: 0.75rem; }
+    .preview table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .preview th, .preview td { border-bottom: 1px solid #334155; padding: 0.25rem; text-align: left; }
+    .notes-box { flex: 1; font-size: 1.12rem; line-height: 1.55; color: #fef08a; background: #171712; border-color: #854d0e; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><strong>Vista del Orador</strong> · <span id="sp-cur-title"></span></div>
+    <div>
+      <span class="timer" id="sp-timer">00:00:00</span>
+      <button onclick="resetTimer()">Reiniciar reloj</button>
+      <button onclick="window.opener && window.opener.go(-1)">◀ Anterior</button>
+      <button onclick="window.opener && window.opener.go(1)">Siguiente ▶</button>
+    </div>
+  </header>
+  <main>
+    <div class="col">
+      <div class="panel" style="flex:1">
+        <h4>Diapositiva Actual</h4>
+        <div class="preview" id="sp-cur-body"></div>
+      </div>
+      <div class="panel" style="flex:0.85">
+        <h4 id="sp-next-title">Siguiente</h4>
+        <div class="preview" id="sp-next-body"></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="panel notes-box">
+        <h4>Notas del Orador</h4>
+        <div id="sp-notes"></div>
+      </div>
+    </div>
+  </main>
+  <script>
+    let start = Date.now();
+    function resetTimer() { start = Date.now(); }
+    setInterval(() => {
+      const s = Math.floor((Date.now() - start) / 1000);
+      const hh = String(Math.floor(s / 3600)).padStart(2, '0');
+      const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+      const ss = String(s % 60).padStart(2, '0');
+      document.getElementById('sp-timer').textContent = hh + ':' + mm + ':' + ss;
+    }, 500);
+    document.addEventListener('keydown', e => {
+      if (!window.opener) return;
+      if (['ArrowRight', 'PageDown', ' '].includes(e.key)) window.opener.go(1);
+      if (['ArrowLeft', 'PageUp'].includes(e.key)) window.opener.go(-1);
+    });
+  <\/script>
+</body>
+</html>`);
+      speakerWin.document.close();
+      syncSpeakerView();
+    }
+
+    if (channel) {
+      channel.onmessage = e => {
+        if (e.data && e.data.type === 'goto') {
+          idx = e.data.idx;
+          render(false);
+        }
+      };
+    }
+
+    document.addEventListener('keydown', e => {
+      if (['ArrowRight', 'PageDown', ' '].includes(e.key)) go(1);
+      if (['ArrowLeft', 'PageUp'].includes(e.key)) go(-1);
+      if (e.key === 's' || e.key === 'S') openSpeakerView();
+    });
+
+    render(false);
+  </script>
+</body>
+</html>
