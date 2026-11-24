@@ -33,12 +33,23 @@ jobs:
             let autoRaw = 0;
             const autoChecks = [];
 
-            // 1. Grupo y Taller (20 pts)
-            if (grupo && taller) {
+            // 1. Coherencia completa: Título [Grupo-XX] === Desplegable Grupo === Turno y Taller (20 pts)
+            const titleGrupoMatch = (issue.title || '').match(/\[Grupo-([AB][1-6])\]/i);
+            const titleGrupo = titleGrupoMatch ? titleGrupoMatch[1].toUpperCase() : null;
+            const turnoPrefix = turno === 'A' ? 'A' : (turno === 'B' ? 'B' : null);
+            const turnoCoherente = !turnoPrefix || (grupo && grupo.startsWith(turnoPrefix));
+
+            if (grupo && taller && titleGrupo === grupo && turnoCoherente) {
               autoRaw += 20;
-              autoChecks.push(`✅ **Grupo (${grupo}) y Taller (${taller}) identificados:** 20/20`);
+              autoChecks.push(`✅ **Identificación coherente (Título \`[Grupo-${titleGrupo}]\`, desplegable \`${grupo}\`, Turno ${turno} y ${taller}):** 20/20`);
+            } else if (!titleGrupo) {
+              autoChecks.push(`❌ **Título sin grupo válido:** Cambia \`[Grupo-XX]\` por \`[Grupo-${grupo || 'A1'}]\` en el título del Issue (0/20).`);
+            } else if (titleGrupo !== grupo) {
+              autoChecks.push(`❌ **Discrepancia título vs formulario:** El título indica \`Grupo-${titleGrupo}\` pero elegiste \`${grupo}\` en el desplegable (0/20).`);
+            } else if (!turnoCoherente) {
+              autoChecks.push(`❌ **Discrepancia turno vs grupo:** Elegiste Turno ${turno} pero el grupo \`${grupo}\` pertenece al Turno ${grupo[0]} (0/20).`);
             } else {
-              autoChecks.push(`❌ **Grupo o Taller no detectado:** Selecciona A1–A6/B1–B6 y W1–W4.`);
+              autoChecks.push(`❌ **Grupo o Taller no detectado:** Selecciona A1–A6/B1–B6 y W1–W4 (0/20).`);
             }
 
             // 2. Integrantes y roles (20 pts)
